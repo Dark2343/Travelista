@@ -1,10 +1,10 @@
-// routes/events.js
 const express = require('express');
 const Event = require('../models/event');
+const { protect, isAdmin } = require('../middlewares/protect'); // ⬅️ Import the protect & isAdmin middleware
 const router = express.Router();
 
-// Create an event
-router.post('/', async (req, res) => {
+// 🔐 Protected: Only admins can create events
+router.post('/', protect, isAdmin, async (req, res) => {
   try {
     const event = new Event(req.body);
     await event.save();
@@ -14,7 +14,7 @@ router.post('/', async (req, res) => {
   }
 });
 
-// Get all events
+// 🔓 Public: Anyone can view events
 router.get('/', async (req, res) => {
   try {
     const events = await Event.find();
@@ -24,7 +24,7 @@ router.get('/', async (req, res) => {
   }
 });
 
-// Get a specific event by ID
+// 🔓 Public: Anyone can view a single event
 router.get('/:id', async (req, res) => {
   try {
     const event = await Event.findById(req.params.id);
@@ -37,8 +37,8 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// Update an event by ID
-router.put('/:id', async (req, res) => {
+// 🔐 Protected: Only admins can update
+router.put('/:id', protect, isAdmin, async (req, res) => {
   try {
     const event = await Event.findByIdAndUpdate(req.params.id, req.body, { new: true });
     if (!event) {
@@ -50,8 +50,8 @@ router.put('/:id', async (req, res) => {
   }
 });
 
-// Delete an event by ID
-router.delete('/:id', async (req, res) => {
+// 🔐 Protected: Only admins can delete
+router.delete('/:id', protect, isAdmin, async (req, res) => {
   try {
     const event = await Event.findByIdAndDelete(req.params.id);
     if (!event) {

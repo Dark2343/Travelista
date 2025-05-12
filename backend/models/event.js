@@ -6,6 +6,7 @@ const eventSchema = new mongoose.Schema({
   title: {
     type: String,
     required: true,
+    trim: true,
   },
   image: {
     type: String, // Assuming image is stored as a URL or file path
@@ -14,6 +15,7 @@ const eventSchema = new mongoose.Schema({
   location: {
     type: String,
     required: true,
+    trim: true,
   },
   startDate: {
     type: Date,
@@ -34,15 +36,26 @@ const eventSchema = new mongoose.Schema({
   description: {
     type: String,
     required: true,
+    trim: true,
   },
   category: {
     type: String,
     required: true,
+    trim: true,
   },
   tags: {
     type: [String], // Array of tags (e.g., ['music', 'concert'])
     required: true,
-  }
+    trim: true,
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
+  updatedAt: {
+    type: Date,
+    default: Date.now,
+  },
 });
 
 // Create and export the model
