@@ -58,6 +58,16 @@ const eventSchema = new mongoose.Schema({
   },
 });
 
+// Validation to check if the start date is before the end date
+eventSchema.pre('save', function(next) {
+  if (this.endDate && this.startDate > this.endDate) {
+    const err = new Error('Start date must be before the end date');
+    next(err);
+  } else {
+    next();
+  }
+});
+
 // Create and export the model
 const Event = mongoose.model('Event', eventSchema);
 
