@@ -1,13 +1,12 @@
 import Navbar from './components/Navbar';
-import Carousel from './components/Carousel';
-import './App.css';
+import EventMenu from './pages/EventMenu';
 
 function App() {
   return (
     <>
       <Navbar />
       <div className="pt-18">
-        <Carousel />
+        <EventMenu />
       </div>
     </>
   );
