@@ -1,16 +1,16 @@
-import React from 'react';
 import Navbar from './components/Navbar';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Carousel from './components/Carousel';
+import './App.css';
 
 function App() {
   return (
-    <Router>
-      <Navbar /> {/* Include the Navbar component */}
-      {/* Define your routes here */}
-      <Routes>
-      </Routes>
-    </Router>
-  )
+    <>
+      <Navbar />
+      <div className="pt-18">
+        <Carousel />
+      </div>
+    </>
+  );
 }
 
-export default App
+export default App;

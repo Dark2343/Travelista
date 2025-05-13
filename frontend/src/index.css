@@ -1,8 +1,27 @@
 @import "tailwindcss";
+@import 'swiper/css';
+@import 'swiper/css/pagination';
+@import '@fontsource/inter';
+
+@font-face {
+  font-family: 'GenBk';
+  font-style: normal;
+  font-weight: normal;
+  src: url('./assets/fonts/GenBkBasR.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'GenBk';
+  font-style: normal;
+  font-weight: bold;
+  src: url('./assets/fonts/GenBkBasB.ttf') format('truetype');
+}
 
 @theme {
   --color-navbar-dark-mode: #012E1F;
   --color-dark-mode: #073727;
+  --font-GenBk: 'GenBk', sans-serif;
+  --font-inter: 'Inter', sans-serif;
 }
 
 :root {
