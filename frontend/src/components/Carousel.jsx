@@ -1,6 +1,7 @@
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination, Autoplay } from 'swiper/modules';
 import CarouselEventCard from './CarouselEventCard';
+import './Carousel.css'; 
 
 export default function Carousel({ events }) {
 

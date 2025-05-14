@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import Carousel from '../components/Carousel';
 import EventCard from '../components/EventCard';
+import Loading from '../components/Loading';
 import axios from '../services/api';
-import './EventMenu.css';
 
 export default function EventMenu() {
     const [events, setEvents] = useState([]); // State to hold events data
@@ -22,7 +22,7 @@ export default function EventMenu() {
     }, []); // Empty dependency array to run effect only once
 
     if (loading) {
-        return <div className="text-white text-2xl flex justify-center">Loading...</div>; // Show loading message
+        return <Loading/>;
     }
     if (error) {
         return <div className="text-white text-2xl flex justify-center">Error: {error.message}</div>; // Show error message

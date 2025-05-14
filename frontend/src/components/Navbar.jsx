@@ -1,5 +1,7 @@
 // Navbar.jsx
 import { FaSearch, FaUser, FaSun } from "react-icons/fa";
+import Loading from "./Loading";
+import { Link } from "react-router-dom";
 import logo from '../assets/logo.png';
 
 // In your Navbar component
@@ -9,8 +11,13 @@ export default function Navbar() {
         {/* Inner container for the sticky navbar */}
         <div className="sticky bg-navbar-dark-mode z-50 shadow-md px-4 py-2 rounded-xl flex justify-between items-center">  
             {/* Left side: Logo or brand */}
-            <img src= {logo} alt="Travelista Logo" className="h-15 w-40" />
+            <Link to="/">
+                <div className="flex items-center">
+                    <img src={logo} alt={<Loading/>} className="h-15 w-40" />
+                </div>
+            </Link>
 
+            
             {/* Center: Search bar */}
             <div className="flex items-center border-b border-white/90 pl-1 w-1/6">
                 <FaSearch className="text-white" />
