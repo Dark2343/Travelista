@@ -1,14 +1,24 @@
 .custom-pagination .swiper-pagination-bullet {
   width: 10px !important;
   height: 10px !important;
-  background-color: #7AC0A7 !important;
+  background-color: #308C6C !important; /* Bright highlight */
   opacity: 1 !important; /* Ensure full opacity; color is handled by background-color */
   margin: 0 30px !important; /* Space between dots */
   cursor: pointer !important;
   transition: background-color 0.3s ease !important;
-  box-shadow: 3px 2px 10px rgba(0, 0, 0, 0.5) !important; /* Optional shadow for depth */
+  box-shadow: 3px 2px 10px rgba(0, 0, 0, 0.3) !important; /* Optional shadow for depth */
 }
 
 .custom-pagination .swiper-pagination-bullet-active {
+  background-color: #033524 !important; /* Bright highlight */
+}
+
+/* 🌙 Dark mode support */
+.dark .custom-pagination .swiper-pagination-bullet {
+  background-color: #7AC0A7 !important;
+  box-shadow: 3px 2px 10px rgba(0, 0, 0, 0.5) !important; /* Optional shadow for depth */
+}
+
+.dark .custom-pagination .swiper-pagination-bullet-active {
   background-color: #00784D !important; 
 }

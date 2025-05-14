@@ -19,7 +19,7 @@ export default function EventCard({ id, title, location, startDate, endDate, pri
     }
 
     return (
-        <div className="w-[400px] h-[450px] bg-white rounded-3xl overflow-hidden shadow-lg flex-col">
+        <div className="w-[400px] h-[450px] bg-white rounded-3xl overflow-hidden border border-black shadow-xl flex-col">
             {/* Image Side */}
             <div className="w-full h-1/2 cursor-pointer" onClick={handleCardClick}>
                 <img
