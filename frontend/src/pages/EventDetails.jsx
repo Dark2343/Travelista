@@ -38,13 +38,13 @@ export default function EventDetails() {
     }
 
     if (error) {
-        return <div className="text-white text-2xl flex justify-center">Error: {error.message}</div>; // Show error message
+        return <div className="text-black dark:text-white text-2xl flex justify-center">Error: {error.message}</div>; // Show error message
     }
 
     return (
         <div className='relative z-0'>
             {/* Blurred circle background */}
-            <div className="absolute w-[500px] h-[450px] rounded-full bg-[#049663] blur-[300px] dark:bg-white dark:blur-[500px] dark:opacity-70 left-1/5 top-1/2 -translate-x-1/2 -translate-y-1/2 z-0" />
+            <div className="absolute w-[500px] h-[450px] rounded-full bg-[#049663] blur-[300px] dark:bg-white dark:blur-[500px] dark:opacity-70 left-1/4 top-1/2 -translate-x-1/2 -translate-y-1/2 z-0" />
             
             {/* Main content should be above the blur */}
             <div className='relative z-10 flex items-start'>
