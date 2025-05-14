@@ -30,11 +30,9 @@ export default function EventCard({ id, title, location, startDate, endDate, pri
             </div>
 
             {/* Text Side */}
-            <div className="w-full h-1/2 p-6 flex flex-col justify-center">
-                <div className="flex flex-wrap justify-between mb-4">
-                    <h2 className="text-4xl font-GenBk font-normal text-black truncate">{title}</h2>
-                    <h3 className="text-2xl font-inter font-light text-black text-right">{location}</h3>
-                </div>
+            <div className="w-full h-1/2 px-6 flex flex-col justify-center">
+                <h2 className="text-3xl font-GenBk font-normal text-black truncate">{title}</h2>
+                <h3 className="text-xl font-inter font-light text-black text-right">{location}</h3>
                 <p className="text-lg font-inter text-gray-700 ">{formatDate(startDate)}{endDate ? `- ${formatDate(endDate)}` : ''}</p>
                 <p className="text-lg font-inter mb-5 text-gray-700 ">{price}</p>
         
