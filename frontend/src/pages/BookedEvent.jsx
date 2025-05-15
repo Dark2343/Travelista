@@ -53,7 +53,7 @@ export default function BookedEvent() {
                 <img src={event.image} alt={<Loading/>} className='w-1/2 ml-12 rounded-4xl border border-black dark:border-gray-400'/>
                 
                 {/* Text Side */}
-                <div className='flex flex-col items-center w-full ml-8'>
+                <div className='flex flex-col items-center w-full ml-8 mt-22'>
                     {/* Success Message */}    
                     <h1 className="text-5xl font-inter font-bold text-button-dark-mode dark:text-white">
                       Success
@@ -66,7 +66,7 @@ export default function BookedEvent() {
                       <br />
                       The event starts on <span className='font-bold text-button-dark-mode dark:text-white'>{formatDate(event.startDate)}</span><br/> at <span className='font-bold text-button-dark-mode dark:text-white'>{event.time}</span>.
                     </p>
-                    <hr className="w-1/2 mx-auto mb-10 border-t border-black dark:border-gray-300" />
+                    <hr className="w-3/4 mx-auto mb-10 border-t border-black dark:border-gray-300" />
 
                     {/* Return Button */}
                     <button className="py-3 w-1/3 mx-auto mt-3 bg-button-dark-mode text-white text-lg font-medium rounded-2xl hover:bg-button-hover-dark-mode transition cursor-pointer"

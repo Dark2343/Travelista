@@ -2,12 +2,22 @@ import axios from '../services/api';
 import EventList from '../components/EventList';
 import {useEffect, useState} from 'react';
 import { Link } from 'react-router-dom';
+import { jwtDecode } from 'jwt-decode';
 
 export default function AdminMenu() {
     const [events, setEvents] = useState([]); // State to hold events data
     const [loading, setLoading] = useState(true); // State to manage loading state
     const [error, setError] = useState(null); // State to manage error state
-  
+    const [user, setUser] = useState(null); // State to hold user data
+
+    useEffect(() => {
+        const token = localStorage.getItem('token'); // Get token from local storage
+        if (token) {
+            const decodedToken = jwtDecode(token); // Decode the token
+            setUser(decodedToken); // Set user data from decoded token
+        }
+    }, []); // Empty dependency array to run effect only once
+
     useEffect(() => {
         axios.get('/events')
         .then((response) => {
@@ -38,19 +48,19 @@ export default function AdminMenu() {
                 </Link>
             </div>
             <div className="mb-10">
-                <EventList events={upcoming} />
+                <EventList events={upcoming} user={user}/>
             </div>
             <h1 className="text-left text-3xl font-inter font-medium text-[#313131] dark:text-white  ml-40 mb-5">
                 Ongoing Events
             </h1>
             <div className="mb-10">
-                <EventList events={ongoingEvents} />
+                <EventList events={ongoingEvents} user={user}/>
             </div>
             <h1 className="text-left text-3xl font-inter font-medium text-[#313131] dark:text-white  ml-40 mb-5">
                 Past Events
             </h1>
             <div className="mb-10">
-                <EventList events={pastEvents} />
+                <EventList events={pastEvents} user={user}/>
             </div>
         </div>
     );
