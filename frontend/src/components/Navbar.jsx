@@ -50,7 +50,9 @@ export default function Navbar() {
                 </div>
 
                 <div className="flex space-x-6 text-white mr-5">
-                    <FaUser className="cursor-pointer" size={27}></FaUser>
+                    <Link to="/login">
+                        <FaUser className="cursor-pointer" size={27}></FaUser>
+                    </Link>
                     <div className="cursor-pointer" onClick={toggleDarkMode}>
                         {isDarkMode ? (
                             <FaSun size={27} className="text-white" />
