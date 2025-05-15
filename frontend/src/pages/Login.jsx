@@ -94,15 +94,15 @@ export default function Login() {
                     </div>
                 </div>
                 {/* White Part Container */}
-                <div className="bg-white w-3/5 h-full flex flex-col pl-15 pt-20">
+                <div className="bg-white w-3/5 h-full flex flex-col pt-20 pr-10">
                     {/* Header Text */}
-                    <div className="flex flex-col items-start mb-18">
+                    <div className="flex flex-col items-start mb-18 pl-15">
                         <h1 className="text-2xl font-inter font-bold text-center  text-gray-700">Continue Your Adventures</h1>
-                        <h1 className="text-4xl font-inter font-bold text-center mt-5 text-gray-700">Log In to Travelista </h1>
+                        <h1 className="text-4xl font-inter font-bold text-center mt-5 text-gray-700">Log In to Travelista</h1>
                     </div>
 
                     {/* Email and Password Fields */}
-                    <div className ='flex flex-col justify-between gap-6 ml-5'>
+                    <div className ='flex flex-col justify-between gap-6 items-center'>
                         <input
                             type="text"
                             placeholder="E-mail"
@@ -119,13 +119,20 @@ export default function Login() {
                             className="w-[450px] h-[60px] bg-transparent text-gray-700 font-inter rounded-xl border-2 border-gray-400 px-3 mb-4
                                 placeholder-gray-500 placeholder:font-inter placeholder:text-lg
                                 focus:ring-2 focus:outline-none focus:border-green-600 focus:ring-green-600 transition"/>
+                        
+                        {/* Login Button */}
+                        <button className="py-3 w-1/3 mt-8 bg-button-dark-mode text-white text-lg font-medium rounded-2xl hover:bg-button-hover-dark-mode transition cursor-pointer"
+                            onClick={handleSubmit}>
+                            {loading ? <Loading/> : 'Log In'}
+                        </button>
                     </div>
 
-                    {/* Login Button */}
-                    <button className="py-3 w-1/3 ml-50 mt-15 bg-button-dark-mode text-white text-lg font-medium rounded-2xl hover:bg-button-hover-dark-mode transition cursor-pointer"
-                        onClick={handleSubmit}>
-                        {loading ? <Loading/> : 'Log In'}
-                    </button>
+
+                    {/* Sign Up Link */}
+                    <div className="flex mt-40 ml-5">
+                        <h1 className="text-gray-700 font-inter font-medium text-lg">Don't have an account?</h1>
+                        <Link to="/register" className="text-green-600 font-inter text-lg font-bold ml-1">Sign Up</Link>
+                    </div>
                 </div>
             </div>
         </div>
