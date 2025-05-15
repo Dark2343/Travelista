@@ -18,6 +18,8 @@ export default function Register() {
     };
     
     const [isDarkMode, setIsDarkMode] = useState(getInitialTheme); // Get initial theme state
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
@@ -40,12 +42,13 @@ export default function Register() {
     };
 
     // Handle form submission
-    const loginUser = async (userData) => {
+    const registerUser = async (userData) => {
         setLoading(true);
         try {
-            const response = await axios.post('/users/login', userData);
+            const response = await axios.post('/users/register', userData);
             localStorage.setItem('token', response.data.token); // Store token in localStorage
-            console.log('User logged in successfully:', response.data);
+
+            console.log('Account created successfully:', response.data);
             navigate('/'); // Redirect to home page
         } catch (error) {
             console.error('Error logging in:', error);
@@ -58,17 +61,19 @@ export default function Register() {
     const handleSubmit = () => {
 
         // Validate form fields
-        if (!email || !password) {
+        if (!firstName || !lastName || !email || !password) {
             alert('Please fill in all fields');
             return;
         }
         
         const userData = {
+            "firstName": firstName,
+            "lastName": lastName,
             "email": email,
             "password": password,
         };
             
-        loginUser(userData);
+        registerUser(userData);
     };
 
   return (
@@ -101,6 +106,26 @@ export default function Register() {
                         <h1 className="text-4xl font-inter font-bold text-center mt-5 text-gray-700">Sign Up to Travelista</h1>
                     </div>
 
+                    {/* First and Last Name Fields */}
+                    <div className ='flex justify-center gap-4 mb-4'>
+                        <input
+                            type="text"
+                            placeholder="First Name"
+                            value={firstName}
+                            onChange={(e) => setFirstName(e.target.value)}
+                            className="w-[219px] h-[60px] bg-transparent text-gray-700 font-inter rounded-xl border-2 border-gray-400 px-3 mb-4
+                                placeholder-gray-500 placeholder:font-inter placeholder:text-lg
+                                focus:ring-2 focus:outline-none focus:border-green-600 focus:ring-green-600 transition"/>
+                        <input
+                            type="text"
+                            placeholder="Last Name"
+                            value={lastName}
+                            onChange={(e) => setLastName(e.target.value)}
+                            className="w-[219px] h-[60px] bg-transparent text-gray-700 font-inter rounded-xl border-2 border-gray-400 px-3 mb-4
+                                placeholder-gray-500 placeholder:font-inter placeholder:text-lg
+                                focus:ring-2 focus:outline-none focus:border-green-600 focus:ring-green-600 transition"/>
+                    </div>
+                    
                     {/* Email and Password Fields */}
                     <div className ='flex flex-col justify-between gap-6 items-center'>
                         <input
@@ -120,16 +145,16 @@ export default function Register() {
                                 placeholder-gray-500 placeholder:font-inter placeholder:text-lg
                                 focus:ring-2 focus:outline-none focus:border-green-600 focus:ring-green-600 transition"/>
                         
-                        {/* Login Button */}
-                        <button className="py-3 w-1/3 mt-8 bg-button-dark-mode text-white text-lg font-medium rounded-2xl hover:bg-button-hover-dark-mode transition cursor-pointer"
+                        {/* Sign Up Button */}
+                        <button className="py-3 w-1/3 mt-5 bg-button-dark-mode text-white text-lg font-medium rounded-2xl hover:bg-button-hover-dark-mode transition cursor-pointer"
                             onClick={handleSubmit}>
-                            {loading ? <Loading/> : 'Log In'}
+                            {loading ? <Loading/> : 'Sign Up'}
                         </button>
                     </div>
 
 
-                    {/* Sign Up Link */}
-                    <div className="flex mt-40 ml-5">
+                    {/* Log In Link */}
+                    <div className="flex mt-17 ml-5">
                         <h1 className="text-gray-700 font-inter font-medium text-lg">Already have an account?</h1>
                         <Link to="/login" className="text-green-600 font-inter text-lg font-bold ml-1">Log In</Link>
                     </div>

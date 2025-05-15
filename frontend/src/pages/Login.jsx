@@ -45,7 +45,8 @@ export default function Login() {
         try {
             const response = await axios.post('/users/login', userData);
             localStorage.setItem('token', response.data.token); // Store token in localStorage
-            console.log('User logged in successfully:', response.data);
+            
+            console.log('Logged in successfully:', response.data);
             navigate('/'); // Redirect to home page
         } catch (error) {
             console.error('Error logging in:', error);
@@ -121,7 +122,7 @@ export default function Login() {
                                 focus:ring-2 focus:outline-none focus:border-green-600 focus:ring-green-600 transition"/>
                         
                         {/* Login Button */}
-                        <button className="py-3 w-1/3 mt-8 bg-button-dark-mode text-white text-lg font-medium rounded-2xl hover:bg-button-hover-dark-mode transition cursor-pointer"
+                        <button className="py-3 w-1/3 mt-5 bg-button-dark-mode text-white text-lg font-medium rounded-2xl hover:bg-button-hover-dark-mode transition cursor-pointer"
                             onClick={handleSubmit}>
                             {loading ? <Loading/> : 'Log In'}
                         </button>
