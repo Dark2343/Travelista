@@ -35,7 +35,7 @@ export default function CarouselEventCard({ id, title, location, startDate, endD
 
 
   const bookEvent = async () => {
-      const response = await axios.post('/bookings', {
+        await axios.post('/bookings', {
           eventId: id,
       }, {
       headers: {
@@ -76,22 +76,40 @@ export default function CarouselEventCard({ id, title, location, startDate, endD
           <span key={index} className='mr-1'>#{tag}</span>
         ))}</p>
 
-        {user.role === 'admin' 
-            ? (<button className="px-4 py-2 w-4/5 mx-auto bg-button-dark-mode text-white text-lg font-medium rounded-2xl hover:bg-button-hover-dark-mode transition cursor-pointer"
-                onClick={handleCardClick}>
-                    Details
-                </button>)
-            : booked ? (
-                <button disabled={true} className="px-4 py-2 w-4/5 mx-auto mb-3 bg-[#4d645c] text-white text-lg font-medium rounded-2xl cursor-pointer">
-                    Booked
-                </button>
-            ) : (
-                <button className="px-4 py-2 w-4/5 mx-auto bg-button-dark-mode text-white text-lg font-medium rounded-2xl hover:bg-button-hover-dark-mode transition cursor-pointer"
-                onClick={user ? bookEvent : () => navigate('/login')}>
-                    Book Now
-                </button>
-            )
-        }
+        {!user ? (
+            // Not logged in
+            <button
+                className="px-4 py-2 w-4/5 mx-auto bg-button-dark-mode text-white text-lg font-medium rounded-2xl hover:bg-button-hover-dark-mode transition cursor-pointer"
+                onClick={() => navigate('/login')}
+            >
+                Book Now
+            </button>
+        ) : user.role === 'admin' ? (
+            // Admin user
+            <button
+                className="px-4 py-2 w-4/5 mx-auto bg-button-dark-mode text-white text-lg font-medium rounded-2xl hover:bg-button-hover-dark-mode transition cursor-pointer"
+                onClick={handleCardClick}
+            >
+                Details
+            </button>
+        ) : !booked ? (
+            // Logged in, not booked
+            <button
+                className="px-4 py-2 w-4/5 mx-auto bg-button-dark-mode text-white text-lg font-medium rounded-2xl hover:bg-button-hover-dark-mode transition cursor-pointer"
+                onClick={bookEvent}
+            >
+                Book Now
+            </button>
+        ) : (
+            // Logged in, already booked
+            <button
+                disabled
+                className="px-4 py-2 w-4/5 mx-auto mb-3 bg-[#4d645c] text-white text-lg font-medium rounded-2xl cursor-not-allowed"
+            >
+                Booked
+            </button>
+        )}
+
       </div>
 
       {/* Image Side */}

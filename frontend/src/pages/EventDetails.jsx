@@ -1,7 +1,8 @@
-import {useEffect, useState} from 'react';
 import axios from '../services/api';
 import Loading from '../components/Loading';
-import { useParams } from 'react-router-dom';
+import { useState, useEffect } from "react";
+import { useParams, useNavigate } from 'react-router-dom';
+import { jwtDecode } from 'jwt-decode';
 
 
 function formatDate(dateString) {
@@ -19,6 +20,7 @@ export default function EventDetails() {
     const [event, setEvent] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         axios.get(`/events/${id}`)
@@ -31,6 +33,63 @@ export default function EventDetails() {
                 setLoading(false);
             });
         }, [id]); // Fetch event details when the component mounts or when the id changes
+        
+    const [booked, setBooked] = useState(false);
+    const [user, setUser] = useState(null); // State to hold user information
+
+    // Check if the user is logged in and decode the JWT token
+    useEffect(() => {
+        const token = localStorage.getItem("token"); // Get the token from localStorage
+        if (token) {
+            try {
+                const decodedToken = jwtDecode(token); // Decode the token
+                setUser(decodedToken); // Set user state with decoded token
+            } catch (error) {
+                console.error("Error decoding token:", error);
+            }
+        }
+    }, []); // Empty dependency array to run only once on mount
+
+    useEffect(() => {
+        const checkBooking = async () => {
+            const result = await isBooked();
+            setBooked(result);
+    };
+        if (user?.role !== 'admin') {
+            checkBooking();
+        }
+    }, []);
+
+
+    const bookEvent = async () => {
+        await axios.post('/bookings', {
+            eventId: id,
+        }, {
+        headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+            },
+        })
+        .then((response) => {
+            console.log('Booking successful:', response.data);
+            navigate(`/events/${id}/book`);
+        })
+    }
+
+    const isBooked = async () => {
+        try {
+            const response = await axios.get('/bookings/user', {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`,
+            },
+        });
+
+            // Assuming response.data is an array of bookings
+            return response.data.some(booking => booking.event._id === id);
+        } catch (error) {
+            console.error("Error checking if event is booked:", error);
+            return false;
+        }
+    };
 
 
     if (loading) {
@@ -92,10 +151,42 @@ export default function EventDetails() {
                         ))}</p>
                     </div>
 
-                    {/* Book Now Button */}
-                    <button className="py-3 w-1/2 mx-auto mt-3 bg-button-dark-mode text-white text-lg font-medium rounded-2xl hover:bg-button-hover-dark-mode transition cursor-pointer">
-                        Book Now
-                    </button>
+                    {!user ? (
+                        // Not logged in
+                        <button
+                            className="py-3 w-1/2 mx-auto mt-3 bg-button-dark-mode text-white text-lg font-medium rounded-2xl hover:bg-button-hover-dark-mode transition cursor-pointer"
+                            onClick={() => navigate('/login')}
+                        >
+                            Book Now
+                        </button>
+                    ) : user.role === 'admin' ? (
+                        <>
+                            <button
+                                className="py-3 w-1/2 mx-auto mt-3 bg-button-dark-mode text-white text-lg font-medium rounded-2xl hover:bg-button-hover-dark-mode transition cursor-pointer">
+                                Edit
+                            </button>
+                            <button
+                                className="py-3 w-1/2 mx-auto mt-3 bg-[#8d2a2a] text-white text-lg font-medium rounded-2xl hover:bg-[#bd3232] transition cursor-pointer">
+                                Delete
+                            </button>
+                        </>
+                    ) : !booked ? (
+                        // Logged in, not booked
+                        <button
+                            className="py-3 w-1/2 mx-auto mt-3 bg-button-dark-mode text-white text-lg font-medium rounded-2xl hover:bg-button-hover-dark-mode transition cursor-pointer"
+                            onClick={bookEvent}
+                        >
+                            Book Now
+                        </button>
+                    ) : (
+                        // Logged in, already booked
+                        <button
+                            disabled
+                            className="py-3 w-1/2 mx-auto mt-3 bg-[#4d645c] text-white text-lg font-medium rounded-2xl cursor-not-allowed"
+                        >
+                            Booked
+                        </button>
+                    )}
                 </div>
                 {/* Render other details about the event */}
             </div>
