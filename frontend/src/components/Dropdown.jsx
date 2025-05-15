@@ -1,34 +1,20 @@
-import React, { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
+import { categories } from "../data/categories"; // Import categories from data file
 
 export default function DropdownSelect({ selectedCategory, onCategoryChange }) {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedOption, setSelectedOption] = useState("");
   
   // Reference for the dropdown menu
   const dropdownRef = useRef(null);
   
-  const options = [
-    "Music & Festivals",
-    "Culture & Heritage",
-    "Food & Drink",
-    "Sports & Adventure",
-    "Fashion & Lifestyle",
-    "Tech & Business",
-    "Art & Film",
-    "Health & Wellness",
-    "Education & Learning",
-    "Travel & Outdoors",
-    "Romance & Dating",
-  ];
-
   // Toggle the dropdown open or closed
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
   };
 
   // Handle option selection and close dropdown
-  const handleOptionSelect = (option) => {
-    onCategoryChange(option);
+  const handleCategorySelect = (category) => {
+    onCategoryChange(category);
     setIsOpen(false);
   };
 
@@ -66,13 +52,13 @@ export default function DropdownSelect({ selectedCategory, onCategoryChange }) {
           className="absolute left-3 bg-white dark:bg-emerald-900 shadow-lg rounded-xl border-2 border-gray-400 z-10 max-h-[200px] overflow-y-auto"
           style={{ scrollbarWidth: "thin", scrollbarColor: "#4CAF50 #f1f1f1" }} // Inline custom scrollbar styles (for Firefox)
         >
-          {options.map((option, index) => (
+          {categories.map((category, index) => (
             <button
               key={index}
-              onClick={() => handleOptionSelect(option)}
+              onClick={() => handleCategorySelect(category)}
               className="block px-4 py-2 w-full text-left text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-emerald-700 hover:rounded-lg transition"
             >
-              {option}
+              {category}
             </button>
           ))}
         </div>

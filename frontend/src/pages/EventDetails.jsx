@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import axios from '../services/api';
 import Loading from '../components/Loading';
 import { useParams } from 'react-router-dom';

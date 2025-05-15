@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import axios from '../services/api';
 import Loading from '../components/Loading';
 import DatePicker from 'react-datepicker';

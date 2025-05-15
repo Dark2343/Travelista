@@ -1,5 +1,5 @@
-import { FaSearch, FaUser, FaSun, FaMoon } from "react-icons/fa";
-import { useState, useEffect, use } from "react";
+import { FaSearch, FaSun, FaMoon } from "react-icons/fa";
+import { useState, useEffect } from "react";
 import Loading from "./Loading";
 import { jwtDecode } from "jwt-decode";
 import { Link } from "react-router-dom";

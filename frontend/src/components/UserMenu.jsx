@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { FaUser } from "react-icons/fa";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 export default function UserMenu({ setUser }) {
   const [menuOpen, setMenuOpen] = useState(false);

@@ -1,6 +1,6 @@
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import Carousel from '../components/Carousel';
-import EventCard from '../components/EventCard';
+import EventList from '../components/EventList';
 import Loading from '../components/Loading';
 import axios from '../services/api';
 
@@ -43,17 +43,8 @@ export default function EventMenu() {
                 All Events
             </h1>
             <div className="flex flex-wrap justify-center gap-10 mb-20">
-                {/* Render the EventCards based on fetched events */}
-                {events.map((event) => (
-                    <EventCard key={event._id}
-                        id = {event._id}
-                        title={event.title}
-                        location={event.location}
-                        startDate={event.startDate}
-                        endDate={event.endDate}
-                        price={event.price.toLocaleString('en-US') + ' EGP'}
-                        image={event.image}/>
-                    ))}
+                {/* Render EventList component and pass events as props */}
+                <EventList events={events} />
             </div>
         </div>
     );

@@ -113,7 +113,7 @@ export default function Login() {
                                 placeholder-gray-500 placeholder:font-inter placeholder:text-lg
                                 focus:ring-2 focus:outline-none focus:border-green-600 focus:ring-green-600 transition"/>
                         <input
-                            type="text"
+                            type="password"
                             placeholder="Password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
