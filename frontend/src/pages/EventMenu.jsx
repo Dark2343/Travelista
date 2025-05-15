@@ -42,7 +42,7 @@ export default function EventMenu() {
             <h1 className="text-left text-3xl font-inter text-[#313131] dark:text-white  ml-40 mb-5">
                 All Events
             </h1>
-            <div className="flex flex-wrap justify-center gap-10 mb-20">
+            <div className="flex flex-wrap justify-start gap-10 mb-20">
                 {/* Render EventList component and pass events as props */}
                 <EventList events={events} />
             </div>
