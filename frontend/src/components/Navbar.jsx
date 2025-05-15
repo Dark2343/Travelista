@@ -1,8 +1,10 @@
 import { FaSearch, FaUser, FaSun, FaMoon } from "react-icons/fa";
-import { useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
 import Loading from "./Loading";
+import { jwtDecode } from "jwt-decode";
 import { Link } from "react-router-dom";
 import logo from '../assets/logo.png';
+import UserMenu from "./UserMenu";
 
 export default function Navbar() {
     // Initialize the theme state by checking localStorage
@@ -14,7 +16,22 @@ export default function Navbar() {
     };
 
     const [isDarkMode, setIsDarkMode] = useState(getInitialTheme); // Get initial theme state
+    const [user, setUser] = useState(null); // State to hold user information
 
+    // Check if the user is logged in and decode the JWT token
+    useEffect(() => {
+        const token = localStorage.getItem("token"); // Get the token from localStorage
+        if (token) {
+            try {
+                const decodedToken = jwtDecode(token); // Decode the token
+                setUser(decodedToken); // Set user state with decoded token
+            } catch (error) {
+                console.error("Error decoding token:", error);
+            }
+        }
+    }, []); // Empty dependency array to run only once on mount
+
+    
     // Save the theme to localStorage when isDarkMode changes
     useEffect(() => {
         if (isDarkMode) {
@@ -50,9 +67,33 @@ export default function Navbar() {
                 </div>
 
                 <div className="flex space-x-6 text-white mr-5">
-                    <Link to="/login">
-                        <FaUser className="cursor-pointer" size={27}></FaUser>
-                    </Link>
+                    {user 
+                    ? (
+                      <>
+                        {user.role === "admin" ? (
+                            <Link to="/dashboard">
+                                <button className="text-white font-inter py-1 cursor-pointer">
+                                    Dashboard
+                                </button>
+                            </Link>
+                        )
+                        : (
+                            <Link to="/myEvents">
+                                <button className="text-white font-inter py-1 cursor-pointer">
+                                    My Events
+                                </button>
+                            </Link>
+                        )}
+                        <UserMenu setUser={setUser} />
+                      </>  
+                    )
+                    : (
+                        <Link to="/login">
+                            <button className="text-white font-inter py-1 cursor-pointer">
+                                Log In
+                            </button>
+                        </Link>
+                    )}
                     <div className="cursor-pointer" onClick={toggleDarkMode}>
                         {isDarkMode ? (
                             <FaSun size={27} className="text-white" />
