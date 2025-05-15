@@ -52,9 +52,10 @@ const eventSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-  updatedAt: {
-    type: Date,
-    default: Date.now,
+  status: {
+    type: String,
+    enum: ['upcoming', 'ongoing', 'past'], // Enum for event status
+    default: 'upcoming',
   },
 });
 

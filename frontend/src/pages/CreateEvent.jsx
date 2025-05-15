@@ -44,11 +44,11 @@ export default function CreateEvent() {
   const createEvent = async (eventData) => {
     setLoading(true);
     try {      
-      console.log('Event data:', eventData);
+      const JWT = localStorage.getItem('token');
       const response = await axios.post('/events', JSON.stringify(eventData), {
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY4MjE3MDgyMzk0ODQ4ZGRjZGZlNTg1YSIsImVtYWlsIjoibW9oYW1lZDIwMDNlbGFzaG1hd3lAZ21haWwuY29tIiwicm9sZSI6ImFkbWluIiwiaWF0IjoxNzQ3MTk5ODE5LCJleHAiOjE3NDcyMDM0MTl9.B_GoyQcJw5KWzI4rrKzvAdt8tqsQOmz5tXRndosVgqo'}
+          'Authorization': 'Bearer ' + JWT}
         });
       console.log('Event created successfully:', response.data);
       alert('Event created successfully!');

@@ -3,7 +3,7 @@ import { categories } from "../data/categories";
 
 export default function EventFilter({ category, setCategory, tag, setTag, maxPrice, setMaxPrice }) {
   return (
-    <div className="flex gap-4 justify-start items-center rounded-3xl mb-7 bg-[#1B523F] py-3 w-[900px] ml-40">
+    <div className="flex gap-4 justify-start items-center rounded-3xl mb-7 bg-[#1B523F] py-3 w-[900px] ml-50">
       <IoFilter size={40} className="text-white ml-5" />
       <h1 className="text-white text-2xl font-inter mr-10">Filter</h1>
 

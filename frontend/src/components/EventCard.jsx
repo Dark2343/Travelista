@@ -36,6 +36,8 @@ export default function EventCard({ id, title, location, startDate, endDate, pri
                 <p className="text-lg font-inter text-gray-700 ">{formatDate(startDate)}{endDate ? `- ${formatDate(endDate)}` : ''}</p>
                 <p className="text-lg font-inter mb-5 text-gray-700 ">{price}</p>
         
+                
+
                 {/* Book Now Button */}
                 <button className="px-4 py-2 w-3/4 mx-auto mb-3 bg-button-dark-mode text-white text-lg font-medium rounded-2xl hover:bg-button-hover-dark-mode transition cursor-pointer">
                     Book Now

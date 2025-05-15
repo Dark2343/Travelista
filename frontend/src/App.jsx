@@ -5,6 +5,7 @@ import CreateEvent from './pages/CreateEvent';
 import EventDetails from './pages/EventDetails';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import AdminMenu from './pages/AdminMenu';
 
 
 function AppContent() {
@@ -20,6 +21,7 @@ function AppContent() {
         <Routes>
           <Route path="/" element={<EventMenu />} />
           <Route path="/events/:id" element={<EventDetails />} />
+          <Route path="/dashboard" element={<AdminMenu />} />
           <Route path="/dashboard/createEvent" element={<CreateEvent />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
