@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import EventCard from "./EventCard";
 import EventFilter from "./EventFilter";
 
-export default function EventList({ events }) {
+export default function EventList({ events, user }) {
   const [filteredEvents, setFilteredEvents] = useState(events);
   const [category, setCategory] = useState("");
   const [tag, setTag] = useState("");
@@ -48,6 +48,7 @@ export default function EventList({ events }) {
             endDate={event.endDate}
             price={event.price.toLocaleString("en-US") + " EGP"}
             image={event.image}
+            user={user}
           />
         ))}
       </div>

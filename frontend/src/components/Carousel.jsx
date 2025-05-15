@@ -3,7 +3,7 @@ import { Pagination, Autoplay } from 'swiper/modules';
 import CarouselEventCard from './CarouselEventCard';
 import './Carousel.css'; 
 
-export default function Carousel({ events }) {
+export default function Carousel({ events, user }) {
 
   return (
     <div className="w-full max-w-6xl mx-auto px-4">
@@ -33,6 +33,7 @@ export default function Carousel({ events }) {
                 price={event.price.toLocaleString('en-US') + ' EGP'}
                 tags={event.tags}
                 image={event.image}
+                user={user}
               />
             </SwiperSlide>
           ))}

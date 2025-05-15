@@ -1,5 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import Loading from "./Loading";
+import axios from '../services/api';
+import React, { useState, useEffect } from "react";
+
 
 function formatDate(dateString) {
   const date = new Date(dateString);
@@ -10,9 +13,52 @@ function formatDate(dateString) {
   });
 }
 
-export default function EventCard({ id, title, location, startDate, endDate, price, image }) {
+export default function EventCard({ id, title, location, startDate, endDate, price, image, user }) {
 
     const navigate = useNavigate();
+    const [booked, setBooked] = useState(false);
+
+    useEffect(() => {
+        const checkBooking = async () => {
+            const result = await isBooked();
+            setBooked(result);
+    };
+        if (user?.role !== 'admin') {
+            checkBooking();
+        }
+    }, []);
+
+
+    const bookEvent = async () => {
+        const response = await axios.post('/bookings', {
+            eventId: id,
+        }, {
+        headers: {
+            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+            },
+        })
+        .then((response) => {
+            console.log('Booking successful:', response.data);
+            navigate(`/events/${id}/book`);
+        })
+    }
+
+    const isBooked = async () => {
+        try {
+            const response = await axios.get('/bookings/user', {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`,
+            },
+        });
+
+            // Assuming response.data is an array of bookings
+            return response.data.some(booking => booking.event._id === id);
+        } catch (error) {
+            console.error("Error checking if event is booked:", error);
+            return false;
+        }
+    };
+
 
     const handleCardClick = () => {
         navigate(`/events/${id}`);
@@ -37,11 +83,22 @@ export default function EventCard({ id, title, location, startDate, endDate, pri
                 <p className="text-lg font-inter mb-5 text-gray-700 ">{price}</p>
         
                 
-
-                {/* Book Now Button */}
-                <button className="px-4 py-2 w-3/4 mx-auto mb-3 bg-button-dark-mode text-white text-lg font-medium rounded-2xl hover:bg-button-hover-dark-mode transition cursor-pointer">
-                    Book Now
-                </button>
+                {user.role === 'admin' 
+                    ? (<button className="px-4 py-2 w-3/4 mx-auto mb-3 bg-button-dark-mode text-white text-lg font-medium rounded-2xl hover:bg-button-hover-dark-mode transition cursor-pointer"
+                        onClick={handleCardClick}>
+                            Details
+                        </button>)
+                    : booked ? (
+                        <button disabled={true} className="px-4 py-2 w-3/4 mx-auto mb-3 bg-[#4d645c] text-white text-lg font-medium rounded-2xl cursor-pointer">
+                            Booked
+                        </button>
+                    ) : (
+                        <button className="px-4 py-2 w-3/4 mx-auto mb-3 bg-button-dark-mode text-white text-lg font-medium rounded-2xl hover:bg-button-hover-dark-mode transition cursor-pointer"
+                        onClick={user ? bookEvent : () => navigate('/login')}>
+                            Book Now
+                        </button>
+                    )
+                }
             </div>
         </div>
     );

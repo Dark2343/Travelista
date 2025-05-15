@@ -3,11 +3,26 @@ import Carousel from '../components/Carousel';
 import EventList from '../components/EventList';
 import Loading from '../components/Loading';
 import axios from '../services/api';
+import { jwtDecode } from 'jwt-decode';
 
 export default function EventMenu() {
     const [events, setEvents] = useState([]); // State to hold events data
     const [loading, setLoading] = useState(true); // State to manage loading state
     const [error, setError] = useState(null); // State to manage error state
+    const [user, setUser] = useState(null); // State to hold user information
+
+    // Check if the user is logged in and decode the JWT token
+    useEffect(() => {
+        const token = localStorage.getItem("token"); // Get the token from localStorage
+        if (token) {
+            try {
+                const decodedToken = jwtDecode(token); // Decode the token
+                setUser(decodedToken); // Set user state with decoded token
+            } catch (error) {
+                console.error("Error decoding token:", error);
+            }
+        }
+    }, []); // Empty dependency array to run only once on mount
 
     useEffect(() => {
         axios.get('/events')
@@ -38,14 +53,16 @@ export default function EventMenu() {
             </h1>
             <div className='relative z-10 mb-20'>
                 <Carousel
-                events={events.slice(0, 5)}/>
+                events={events.slice(0, 5)}
+                user={user}/>
             </div>
             <h1 className="text-left text-3xl font-inter font-medium text-[#313131] dark:text-white  ml-40 mb-5">
                 All Events
             </h1>
             <div className="mb-10">
                 {/* Render EventList component and pass events as props */}
-                <EventList events={events} />
+                <EventList events={events}
+                user={user} />
             </div>
         </div>
     );

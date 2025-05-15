@@ -1,5 +1,8 @@
+import axios from "../services/api";
 import Loading from "./Loading";
 import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+
 
 function formatDate(dateString) {
   const date = new Date(dateString);
@@ -10,13 +13,56 @@ function formatDate(dateString) {
   });
 }
 
-export default function CarouselEventCard({ id, title, location, startDate, endDate, price, tags, image }) {
+export default function CarouselEventCard({ id, title, location, startDate, endDate, price, tags, image, user }) {
 
+  const [booked, setBooked] = useState(false);
   const navigate = useNavigate();
 
   const handleCardClick = () => {
       navigate(`/events/${id}`);
   }
+
+
+  useEffect(() => {
+      const checkBooking = async () => {
+          const result = await isBooked();
+          setBooked(result);
+  };
+      if (user?.role !== 'admin') {
+          checkBooking();
+      }
+  }, []);
+
+
+  const bookEvent = async () => {
+      const response = await axios.post('/bookings', {
+          eventId: id,
+      }, {
+      headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          },
+      })
+      .then((response) => {
+          console.log('Booking successful:', response.data);
+          navigate(`/events/${id}/book`);
+      })
+  }
+
+  const isBooked = async () => {
+      try {
+          const response = await axios.get('/bookings/user', {
+          headers: {
+              'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          },
+      });
+
+          // Assuming response.data is an array of bookings
+          return response.data.some(booking => booking.event._id === id);
+      } catch (error) {
+          console.error("Error checking if event is booked:", error);
+          return false;
+      }
+  };
 
   return (
     <div className="w-full h-[300px] sm:h-[400px] md:h-[460px] bg-white rounded-2xl overflow-hidden shadow-md flex">
@@ -30,10 +76,22 @@ export default function CarouselEventCard({ id, title, location, startDate, endD
           <span key={index} className='mr-1'>#{tag}</span>
         ))}</p>
 
-        {/* Book Now Button */}
-        <button className="px-4 py-2 w-4/5 mx-auto bg-button-dark-mode text-white text-lg font-medium rounded-2xl hover:bg-button-hover-dark-mode transition cursor-pointer">
-          Book Now
-        </button>
+        {user.role === 'admin' 
+            ? (<button className="px-4 py-2 w-4/5 mx-auto bg-button-dark-mode text-white text-lg font-medium rounded-2xl hover:bg-button-hover-dark-mode transition cursor-pointer"
+                onClick={handleCardClick}>
+                    Details
+                </button>)
+            : booked ? (
+                <button disabled={true} className="px-4 py-2 w-4/5 mx-auto mb-3 bg-[#4d645c] text-white text-lg font-medium rounded-2xl cursor-pointer">
+                    Booked
+                </button>
+            ) : (
+                <button className="px-4 py-2 w-4/5 mx-auto bg-button-dark-mode text-white text-lg font-medium rounded-2xl hover:bg-button-hover-dark-mode transition cursor-pointer"
+                onClick={user ? bookEvent : () => navigate('/login')}>
+                    Book Now
+                </button>
+            )
+        }
       </div>
 
       {/* Image Side */}
