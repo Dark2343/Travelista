@@ -1,5 +1,6 @@
 // controllers/eventController.js
 const Event = require('../models/event');
+const Booking = require('../models/booking');
 
 // Create a new event (Admin only)
 exports.createEvent = async (req, res) => {
@@ -55,6 +56,10 @@ exports.deleteEvent = async (req, res) => {
     if (!event) {
       return res.status(404).json({ error: 'Event not found' });
     }
+
+    // Optionally, you can also delete associated bookings here
+    await Booking.deleteMany({ event: req.params.id });
+
     res.status(200).json({ message: 'Event deleted' });
   } catch (err) {
     res.status(500).json({ error: err.message });

@@ -1,5 +1,6 @@
 // controllers/userController.js
 const User = require('../models/user');
+const Booking = require('../models/booking');
 const jwt = require('jsonwebtoken');
 
 // Register user
@@ -73,6 +74,26 @@ exports.loginUser = async (req, res) => {
       token,
       expiresIn: process.env.JWT_EXPIRES_IN,  // Token expiration time
     });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+// Delete user
+exports.deleteUser = async (req, res) => {
+  try {
+    const userId = req.params.id;
+
+    // Delete the user
+    const user = await User.findByIdAndDelete(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Delete associated bookings
+    await Booking.deleteMany({ user: userId });
+
+    res.status(200).json({ message: 'User and associated bookings deleted successfully' });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

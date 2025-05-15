@@ -45,36 +45,3 @@ exports.getUserBookings = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
-
-/*
-// (Optional) Get all bookings grouped by user, for admin
-exports.getGroupedBookings = async (req, res) => {
-  try {
-    const bookings = await Booking.find().populate('event'); // populate event field only
-
-    const groupedBookings = bookings.reduce((acc, booking) => {
-      if (!acc[booking.user]) {
-        acc[booking.user] = [];
-      }
-      acc[booking.user].push(booking);
-      return acc;
-    }, {});
-
-    // Now retrieve all the user data in a single query
-    const userIds = Object.keys(groupedBookings); // Getting all user IDs
-    const users = await User.find({ 'id': { $in: userIds } });
-
-    // Add user data to each booking group
-    Object.keys(groupedBookings).forEach(userId => {
-      const user = users.find(u => u.id.toString() === userId);
-      groupedBookings[userId].forEach(booking => {
-        booking.user = user; // Attach full user data to the bookings
-      });
-    });
-
-    res.status(200).json(groupedBookings); // Return the grouped bookings by user
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-};
-*/
