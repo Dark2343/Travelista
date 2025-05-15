@@ -55,7 +55,7 @@ export default function CarouselEventCard({ id, title, location, startDate, endD
               'Authorization': `Bearer ${localStorage.getItem('token')}`,
           },
       });
-
+      
           // Assuming response.data is an array of bookings
           return response.data.some(booking => booking.event._id === id);
       } catch (error) {

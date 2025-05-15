@@ -6,6 +6,8 @@ import EventDetails from './pages/EventDetails';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import AdminMenu from './pages/AdminMenu';
+import BookedEvent from './pages/BookedEvent';
+import MyEvents from './pages/MyEvents';
 
 
 function AppContent() {
@@ -21,10 +23,12 @@ function AppContent() {
         <Routes>
           <Route path="/" element={<EventMenu />} />
           <Route path="/events/:id" element={<EventDetails />} />
+          <Route path="/events/:id/book" element={<BookedEvent />} />
           <Route path="/dashboard" element={<AdminMenu />} />
           <Route path="/dashboard/createEvent" element={<CreateEvent />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/myEvents" element={<MyEvents />} />
         </Routes>
       </div>
     </>
