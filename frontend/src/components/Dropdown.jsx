@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { categories } from "../data/categories"; // Import categories from data file
 
-export default function DropdownSelect({ selectedCategory, onCategoryChange }) {
+export default function DropdownSelect({ options = categories, selectedOption, onOptionChange }) {
   const [isOpen, setIsOpen] = useState(false);
   
   // Reference for the dropdown menu
@@ -13,8 +13,8 @@ export default function DropdownSelect({ selectedCategory, onCategoryChange }) {
   };
 
   // Handle option selection and close dropdown
-  const handleCategorySelect = (category) => {
-    onCategoryChange(category);
+  const handleOptionSelect = (option) => {
+    onOptionChange(option);
     setIsOpen(false);
   };
 
@@ -38,9 +38,9 @@ export default function DropdownSelect({ selectedCategory, onCategoryChange }) {
       {/* Dropdown Button */}
       <input
         type="text"
-        value={selectedCategory}
+        value={selectedOption}
         onClick={toggleDropdown}
-        placeholder="Category"
+        placeholder={options == categories ? "Category" : "Status"}
         readOnly
         className="w-[230px] h-[50px] bg-transparent text-gray-700 dark:text-gray-300 font-inter rounded-xl border-2 border-gray-400 px-3 mb-4 placeholder-gray-500 dark:placeholder-gray-400 placeholder:font-inter focus:ring-2 focus:outline-none focus:border-green-600 focus:ring-green-600 dark:focus:border-gray-100 dark:focus:ring-gray-100 transition cursor-pointer"
       />
@@ -52,13 +52,13 @@ export default function DropdownSelect({ selectedCategory, onCategoryChange }) {
           className="absolute left-3 bg-white dark:bg-emerald-900 shadow-lg rounded-xl border-2 border-gray-400 z-10 max-h-[200px] overflow-y-auto"
           style={{ scrollbarWidth: "thin", scrollbarColor: "#4CAF50 #f1f1f1" }} // Inline custom scrollbar styles (for Firefox)
         >
-          {categories.map((category, index) => (
+          {options.map((option, index) => (
             <button
               key={index}
-              onClick={() => handleCategorySelect(category)}
+              onClick={() => handleOptionSelect(option)}
               className="block px-4 py-2 w-full text-left text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-emerald-700 hover:rounded-lg transition"
             >
-              {category}
+              {option}
             </button>
           ))}
         </div>

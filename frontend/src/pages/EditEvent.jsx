@@ -1,9 +1,29 @@
 import { useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import axios from '../services/api';
 import Loading from '../components/Loading';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import Dropdown from '../components/Dropdown';
+
+function convertTo24Hour(time12h) {
+  const [time, modifier] = time12h.split(' '); // Split "10:00" and "AM"
+  let [hours, minutes] = time.split(':');
+
+  if (modifier === 'PM' && hours !== '12') {
+    hours = String(parseInt(hours, 10) + 12);
+  }
+  if (modifier === 'AM' && hours === '12') {
+    hours = '00';
+  }
+
+  // Pad with zero if needed
+  if (hours.length === 1) {
+    hours = '0' + hours;
+  }
+
+  return `${hours}:${minutes}`;
+}
 
 function convertTo12Hour(time24) {
   let [hours, minutes] = time24.split(':');
@@ -15,64 +35,62 @@ function convertTo12Hour(time24) {
   return `${hours}:${minutes} ${ampm}`;
 }
 
-export default function CreateEvent() {
+export default function EditEvent() {
   
-  // State variables for form inputs
-  const [currentDate, setCurrentDate] = useState(null);
-  const [image, setImage] = useState(null);
-  const [title, setTitle] = useState('');
-  const [location, setEventLocation] = useState('');
-  const [endDate, setEndDate] = useState(null);
-  const [time, setTime] = useState('');
-  const [description, setDescription] = useState('');
-  const [price, setPrice] = useState('');
-  const [category, setCategory] = useState('');
-  const [tags, setTags] = useState('');
-  const [loading, setLoading] = useState(false);
+    const loc = useLocation();
+    const event = loc.state?.event;
+    const navigate = useNavigate();
 
-  const today = new Date(); // Prevent selecting past dates
+    // State variables for form inputs
+    const [currentDate, setCurrentDate] = useState(event.startDate || null);
+    const [image, setImage] = useState(event.image || null);
+    const [title, setTitle] = useState(event.title || '');
+    const [location, setEventLocation] = useState(event.location || '');
+    const [endDate, setEndDate] = useState(event.endDate || null);
+    const [time, setTime] = useState(convertTo24Hour(event.time) || '');
+    const [description, setDescription] = useState(event.description || '');
+    const [price, setPrice] = useState(event.price || '');
+    const [category, setCategory] = useState(event.category || '');
+    const [tags, setTags] = useState(event.tags.join(' ') || '');
+    const [status, setStatus] = useState(event.status || '');
+    const [loading, setLoading] = useState(false);
 
-  const handleAddImage = () => {
-    const url = prompt('Enter image URL:');
-    if (url) setImage(url);
-  };
+    const today = new Date(); // Prevent selecting past dates
 
-  const handleCategorySelect = (category) => {
-    setCategory(category);  // update the category
-  };
+    const handleAddImage = () => {
+        const url = prompt('Enter image URL:');
+        if (url) setImage(url);
+    };
 
-  const handleTagsChange = (e) => {
-    setTags(e.target.value);  // update the input value
-  };
-  
+    const handleCategorySelect = (category) => {
+        setCategory(category);  // update the category
+    };
+    
+    const handleTagsChange = (e) => {
+        setTags(e.target.value);  // update the input value
+    };
+        
+    const handleStatusSelect = (status) => {
+        setStatus(status);  // update the status
+    };
   // Handle form submission
-  const createEvent = async (eventData) => {
+  const updateEvent = async (eventData) => {
     setLoading(true);
     try {      
-      const JWT = localStorage.getItem('token');
-      const response = await axios.post('/events', JSON.stringify(eventData), {
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + JWT}
+        const JWT = localStorage.getItem('token');
+        const response = await axios.put(`/events/${event._id}`, JSON.stringify(eventData), {
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + JWT}
         });
-      console.log('Event created successfully:', response.data);
-      alert('Event created successfully!');
-
-      setCurrentDate(null);
-      setImage(null);
-      setTitle('');
-      setEventLocation('');
-      setEndDate(null);
-      setTime('');
-      setDescription('');
-      setPrice('');
-      setCategory('');
-      setTags('');
+        console.log('Event updated successfully:', response.data);
+        alert('Event updated successfully!');
+      navigate(`/events/${event._id}`);
     } catch (error) {
-      console.error('Error creating event:', error);
-      alert('Error creating event. Please try again.');
+        console.error('Error updating event:', error);
+        alert('Error updating event. Please try again.');
     } finally {
-      setLoading(false);
+        setLoading(false);
     }
   };
   
@@ -90,14 +108,15 @@ export default function CreateEvent() {
         "location" : location,
         "startDate": currentDate,
         "endDate": endDate,
-        "time": convertTo12Hour(time),
+        "time": time,
         "price": formattedPrice,
         "description": description,
         "category": category,
         "tags": formattedTags,
+        'status': status,
       };
         
-      createEvent(eventData);
+      updateEvent(eventData);
   };
 
   if (loading) {
@@ -126,7 +145,10 @@ export default function CreateEvent() {
 
             {/* Text Side */}
             <div className='flex flex-col ml-10'>
-                
+                {/* Status Dropdown */}
+                <div className='ml-58'>
+                    <Dropdown options={['upcoming', 'ongoing', 'past']} selectedOption={status} onOptionChange={handleStatusSelect}/>
+                </div>
                 {/* Title and Location Fields */}
                 <div className ='flex justify-between gap-4 mb-5'>
                   <input
@@ -134,7 +156,7 @@ export default function CreateEvent() {
                       placeholder="Event Title"
                       value={title}
                       onChange={(e) => setTitle(e.target.value)}
-                      className="w-[350px] h-[50px] bg-transparent text-gray-700 dark:text-gray-100 font-inter rounded-xl border-2 border-gray-400 px-3 mb-4
+                      className="w-[350px] h-[50px] bg-transparent text-gray-700 dark:text-gray-300 font-inter rounded-xl border-2 border-gray-400 px-3 mb-4
                       placeholder-gray-500 dark:placeholder-gray-400 placeholder:font-inter
                       focus:ring-2 focus:outline-none focus:border-green-600 focus:ring-green-600
                       dark:focus:border-gray-100 dark:focus:ring-gray-100 transition"/>
@@ -143,7 +165,7 @@ export default function CreateEvent() {
                       placeholder="Event Location"
                       value={location}
                       onChange={(e) => setEventLocation(e.target.value)}
-                      className="w-[350px] h-[50px] bg-transparent text-gray-700 dark:text-gray-100 font-inter rounded-xl border-2 border-gray-400 px-3 mb-4
+                      className="w-[350px] h-[50px] bg-transparent text-gray-700 dark:text-gray-300 font-inter rounded-xl border-2 border-gray-400 px-3 mb-4
                               placeholder-gray-500 dark:placeholder-gray-400 placeholder:font-inter
                               focus:ring-2 focus:outline-none focus:border-green-600 focus:ring-green-600
                               dark:focus:border-gray-100 dark:focus:ring-gray-100 transition"/>
@@ -156,33 +178,34 @@ export default function CreateEvent() {
                       onChange={(date) => setCurrentDate(date)}
                       minDate={today}
                       placeholderText="Start Date"
-                      className="w-full h-[50px] bg-transparent text-gray-700 dark:text-gray-100 font-inter rounded-xl border-2 border-gray-400 px-3 py-2 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:border-green-600 focus:ring-green-600 dark:focus:border-gray-100 dark:focus:ring-gray-100 transition"
+                      className="w-full h-[50px] bg-transparent text-gray-700 dark:text-gray-300 font-inter rounded-xl border-2 border-gray-400 px-3 py-2 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:border-green-600 focus:ring-green-600 dark:focus:border-gray-100 dark:focus:ring-gray-100 transition"
                     />
                     <DatePicker
                       selected={endDate}
                       onChange={(date) => setEndDate(date)}
                       minDate={today}
                       placeholderText="End Date"
-                      className="w-full h-[50px] bg-transparent text-gray-700 dark:text-gray-100 font-inter rounded-xl border-2 border-gray-400 px-3 py-2 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:border-green-600 focus:ring-green-600 dark:focus:border-gray-100 dark:focus:ring-gray-100 transition"
+                      className="w-full h-[50px] bg-transparent text-gray-700 dark:text-gray-300 font-inter rounded-xl border-2 border-gray-400 px-3 py-2 placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none focus:ring-2 focus:border-green-600 focus:ring-green-600 dark:focus:border-gray-100 dark:focus:ring-gray-100 transition"
                     />
-                    {/* Time Picker */}
-                    <input
-                      type="time"
-                      placeholder="Event Time"
-                      value={time}
-                      onChange={(e) => setTime(e.target.value)}
-                      className="w-[200px] h-[50px] bg-transparent text-gray-700 dark:text-gray-300 font-inter rounded-xl border-2 border-gray-400 px-3 mb-4
-                              placeholder-gray-500 dark:placeholder-gray-400 placeholder:font-inter
-                              focus:ring-2 focus:outline-none focus:border-green-600 focus:ring-green-600
-                              dark:focus:border-gray-100 dark:focus:ring-gray-100 transition"/>          
+                  
+                  {/* Time Picker */}
+                  <input
+                        type="time"
+                        placeholder="Event Time"
+                        value={time}
+                        onChange={(e) => setTime(e.target.value)}
+                        className="w-[200px] h-[50px] bg-transparent text-gray-700 dark:text-gray-300 font-inter rounded-xl border-2 border-gray-400 px-3 mb-4
+                                placeholder-gray-500 dark:placeholder-gray-400 placeholder:font-inter
+                                focus:ring-2 focus:outline-none focus:border-green-600 focus:ring-green-600
+                                dark:focus:border-gray-100 dark:focus:ring-gray-100 transition"/>
                 </div>
-    
+                
                 {/* Description Field*/}
                 <textarea
                     placeholder="Description"
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
-                    className="w-full h-[190px] bg-transparent text-gray-700 dark:text-gray-100 font-inter rounded-xl border-2 border-gray-400 px-3 mb-10
+                    className="w-full h-[190px] bg-transparent text-gray-700 dark:text-gray-300 font-inter rounded-xl border-2 border-gray-400 px-3 mb-10
                             placeholder-gray-500 dark:placeholder-gray-400 placeholder:font-inter pt-2 
                             focus:ring-2 focus:outline-none focus:border-green-600 focus:ring-green-600
                             dark:focus:border-gray-100 dark:focus:ring-gray-100 transition
@@ -195,27 +218,26 @@ export default function CreateEvent() {
                       placeholder="Price"
                       value={price}
                       onChange={(e) => setPrice(e.target.value)}
-                      className="w-[200px] h-[50px] bg-transparent text-gray-700 dark:text-gray-100 font-inter rounded-xl border-2 border-gray-400 px-3 mb-4
+                      className="w-[200px] h-[50px] bg-transparent text-gray-700 dark:text-gray-300 font-inter rounded-xl border-2 border-gray-400 px-3 mb-4
                               placeholder-gray-500 dark:placeholder-gray-400 placeholder:font-inter
                               focus:ring-2 focus:outline-none focus:border-green-600 focus:ring-green-600
                               dark:focus:border-gray-100 dark:focus:ring-gray-100 transition
                               [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"/>
-                  <Dropdown selectedCategory={category} onCategoryChange={handleCategorySelect}/>
+                  <Dropdown selectedOption={category} onOptionChange={handleCategorySelect}/>
                   <input
                       type="text"
                       placeholder="Tags (Space separated)"
                       value={tags}
                       onChange={handleTagsChange}
-                      className="w-[220px] h-[50px] bg-transparent text-gray-700 dark:text-gray-100 font-inter rounded-xl border-2 border-gray-400 px-3 mb-4
+                      className="w-[220px] h-[50px] bg-transparent text-gray-700 dark:text-gray-300 font-inter rounded-xl border-2 border-gray-400 px-3 mb-4
                       placeholder-gray-500 dark:placeholder-gray-400 placeholder:font-inter
                       focus:ring-2 focus:outline-none focus:border-green-600 focus:ring-green-600
                       dark:focus:border-gray-100 dark:focus:ring-gray-100 transition"/>
                 </div>
-
-                {/* Create Event Button */}
+                {/* Update Event Button */}
                 <button className="py-3 w-1/2 mx-auto mt-15 bg-button-dark-mode text-white text-lg font-medium rounded-2xl hover:bg-button-hover-dark-mode transition cursor-pointer"
                   onClick={handleSubmit}>
-                    {loading ? <Loading/> : 'Create Event'}
+                    {loading ? <Loading/> : 'Update Event'}
                 </button>
             </div>
         </div>

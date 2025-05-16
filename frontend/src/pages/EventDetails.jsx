@@ -14,6 +14,16 @@ function formatDate(dateString) {
   });
 }
 
+function convertTo12Hour(time24) {
+  let [hours, minutes] = time24.split(':');
+  hours = parseInt(hours, 10);
+  const ampm = hours >= 12 ? 'PM' : 'AM';
+  hours = hours % 12;
+  if (hours === 0) hours = 12; // Midnight or noon edge case
+
+  return `${hours}:${minutes} ${ampm}`;
+}
+
 export default function EventDetails() {
 
     const {id} = useParams();
@@ -75,6 +85,19 @@ export default function EventDetails() {
         })
     }
 
+    const deleteEvent = async () => {
+        await axios.delete(`/events/${id}`, {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`,
+                },
+        })
+        .then((response) => {
+            alert('Event deleted successfully');
+            console.log('Event deleted successfully:', response.data);
+            navigate(`/dashboard`);
+        })
+    }
+
     const isBooked = async () => {
         try {
             const response = await axios.get('/bookings/user', {
@@ -121,7 +144,7 @@ export default function EventDetails() {
                     {/* Event Date and Time*/}
                     <div className="flex flex-wrap justify-between items-start mb-2">
                         <p className='text-2xl font-inter font-light text-gray-700 dark:text-white mb-2'>{formatDate(event.startDate)}{event.endDate ? `- ${formatDate(event.endDate)}` : ''}</p>
-                        <p className='text-2xl font-inter font-light text-gray-700 dark:text-white mr-10'>{event.time}</p>
+                        <p className='text-2xl font-inter font-light text-gray-700 dark:text-white mr-10'>{convertTo12Hour(event.time)}</p>
                     </div>
 
                     {/* Event Price */}
@@ -162,10 +185,12 @@ export default function EventDetails() {
                     ) : user.role === 'admin' ? (
                         <>
                             <button
+                                onClick={() => navigate(`/events/${id}/edit`, { state: { event } })}
                                 className="py-3 w-1/2 mx-auto mt-3 bg-button-dark-mode text-white text-lg font-medium rounded-2xl hover:bg-button-hover-dark-mode transition cursor-pointer">
                                 Edit
                             </button>
                             <button
+                                onClick={deleteEvent}
                                 className="py-3 w-1/2 mx-auto mt-3 bg-[#8d2a2a] text-white text-lg font-medium rounded-2xl hover:bg-[#bd3232] transition cursor-pointer">
                                 Delete
                             </button>

@@ -36,7 +36,7 @@ export default function EventList({ events, user, isScrollable = false }) {
         maxPrice={maxPrice}
         setMaxPrice={setMaxPrice}
       />
-      <div className="mx-22">
+      <div className="mx-17">
         <div className={isScrollable ? "flex justify-start gap-10 mb-15 overflow-x-scroll overflow-y-hidden scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-transparent pb-9" : "flex flex-wrap justify-start gap-10 mb-15"}>
           {filteredEvents.length > 0 ? (filteredEvents.map((event) => (
             <EventCard
