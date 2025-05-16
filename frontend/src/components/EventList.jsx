@@ -38,7 +38,7 @@ export default function EventList({ events, user }) {
       />
 
       <div className="flex flex-wrap justify-center gap-10 mb-15">
-        {filteredEvents.map((event) => (
+        {filteredEvents.length > 0 ? (filteredEvents.map((event) => (
           <EventCard
             key={event._id}
             id={event._id}
@@ -49,8 +49,11 @@ export default function EventList({ events, user }) {
             price={event.price.toLocaleString("en-US") + " EGP"}
             image={event.image}
             user={user}
-          />
-        ))}
+          />))) : (
+          <div className="text-[#313131] dark:text-white font-inter text-2xl flex justify-center mt-10">
+            No events found
+          </div>
+        )}
       </div>
     </div>
   );

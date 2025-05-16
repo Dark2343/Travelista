@@ -24,7 +24,7 @@ export default function AdminMenu() {
                     },
                 }),
             ]);
-            setEvents(eventsRes.data);
+            setEvents(eventsRes.data.events);
             setBookings(bookingsRes.data);
         } catch (error) {
             setError(error);
