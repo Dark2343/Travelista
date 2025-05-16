@@ -6,10 +6,14 @@ import axios from '../services/api';
 import { jwtDecode } from 'jwt-decode';
 
 export default function EventMenu() {
+    const EVENTS_LIMIT = 6; // Number of events to fetch per page
     const [events, setEvents] = useState([]); // State to hold events data
     const [loading, setLoading] = useState(true); // State to manage loading state
+    const [loadingMore, setLoadingMore] = useState(false); // Loading state for "Show More"
     const [error, setError] = useState(null); // State to manage error state
-    const [user, setUser] = useState(null); // State to hold user information
+    const [user, setUser] = useState(null); // State to hold user information    
+    const [page, setPage] = useState(1); // Current page
+    const [hasMore, setHasMore] = useState(true); // If there are more events to load
 
     // Check if the user is logged in and decode the JWT token
     useEffect(() => {
@@ -24,22 +28,51 @@ export default function EventMenu() {
         }
     }, []); // Empty dependency array to run only once on mount
 
+    const fetchEvents = async (pageNum) => {
+        try {
+            const response = await axios.get(`/events?page=${pageNum}&limit=${EVENTS_LIMIT}&upcomingOnly=true`); // Fetch events from the API
+            return response.data;
+        } catch (err) {
+        throw err;
+        }
+    };
+
+    // Initial load
     useEffect(() => {
-        axios.get('/events')
-        .then((response) => {
-            const filteredEvents = response.data.filter((event) => event.status === 'upcoming')
-            .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-            setEvents(filteredEvents); // Set events data
-            setLoading(false); // Set loading to false
-        })
-        .catch((error) => {
-            setError(error); // Set error if any
-            setLoading(false); // Set loading to false
-        });
-    }, []); // Empty dependency array to run effect only once
+        (async () => {
+        try {
+            setLoading(true);
+            const initialData = await fetchEvents(1);
+            setEvents(initialData.events);
+            setHasMore(initialData.events.length < initialData.totalEvents);
+            setPage(1);
+        } catch (err) {
+            setError(err);
+        } finally {
+            setLoading(false);
+        }
+    })();
+    }, []);
+
+    // Load more handler
+    const loadMoreEvents = async () => {
+        setLoadingMore(true);
+        try {
+            const nextPage = page + 1;
+            const newData = await fetchEvents(nextPage);
+            setEvents([...events, ...newData.events]);
+            setPage(nextPage);
+            setHasMore(events.length + newData.events.length < newData.totalEvents);
+            console.log(events);
+        } catch (err) {
+            setError(err);
+        } finally {
+            setLoadingMore(false);
+        }
+    };
 
     if (loading) {
-        return <Loading/>;
+        return <Loading size={30}/>;
     }
     if (error) {
         return <div className="text-[#313131] dark:text-white text-2xl flex justify-center">Error: {error.message}</div>; // Show error message
@@ -65,6 +98,18 @@ export default function EventMenu() {
                 <EventList events={events}
                 user={user} />
             </div>
+
+            {hasMore && (
+                <div className="flex justify-center mb-10">
+                <button
+                    onClick={loadMoreEvents}
+                    disabled={loadingMore}
+                    className="px-6 py-3 bg-button-dark-mode text-white rounded-2xl hover:bg-button-hover-dark-mode transition cursor-pointer"
+                >
+                    {loadingMore ? 'Loading...' : 'Show More'}
+                </button>
+                </div>
+            )}
         </div>
     );
 }

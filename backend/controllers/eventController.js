@@ -16,8 +16,24 @@ exports.createEvent = async (req, res) => {
 // Get all events (Public)
 exports.getAllEvents = async (req, res) => {
   try {
-    const events = await Event.find();
-    res.status(200).json(events);
+    const upcomingOnly = req.query.upcomingOnly === 'true'; // Check if flag is set
+    
+    const totalEvents = await Event.countDocuments(upcomingOnly ? { status: 'upcoming' } : {});
+    const limit = req.query.limit ? parseInt(req.query.limit) : totalEvents; // Get the limit from query params
+    const page = parseInt(req.query.page) || 1; // Get the page number from query params
+    const skip = (page - 1) * limit; // Calculate the number of documents to skip
+
+    const events = await Event.find(upcomingOnly ? { status: 'upcoming' } : {}) // Filter events by status
+    .sort({ createdAt: -1 }) // Sort events by createdAt in descending order
+    .skip(skip) // Skip the documents
+    .limit(limit); // Limit the number of documents returned
+
+    res.status(200).json({
+      events,
+      totalEvents,
+      page,
+      totalPages: Math.ceil(totalEvents / limit), // Calculate total pages
+    });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }

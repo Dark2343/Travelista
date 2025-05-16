@@ -21,7 +21,7 @@ export default function AdminMenu() {
     useEffect(() => {
         axios.get('/events')
         .then((response) => {
-            setEvents(response.data); // Set events data
+            setEvents(response.data.events); // Set events data
             setLoading(false); // Set loading to false
         })
         .catch((error) => {

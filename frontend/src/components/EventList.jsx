@@ -37,7 +37,7 @@ export default function EventList({ events, user }) {
         setMaxPrice={setMaxPrice}
       />
 
-      <div className="flex flex-wrap justify-center gap-10 mb-20">
+      <div className="flex flex-wrap justify-center gap-10 mb-15">
         {filteredEvents.map((event) => (
           <EventCard
             key={event._id}
