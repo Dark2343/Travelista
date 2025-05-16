@@ -13,7 +13,7 @@ function formatDate(dateString) {
   });
 }
 
-export default function CarouselEventCard({ id, title, location, startDate, endDate, price, tags, image, user }) {
+export default function CarouselEventCard({ id, title, location, startDate, endDate, price, category, tags, image, user }) {
 
   const [booked, setBooked] = useState(false);
   const navigate = useNavigate();
@@ -72,6 +72,7 @@ export default function CarouselEventCard({ id, title, location, startDate, endD
         <h3 className="text-2xl font-inter font-light mb-20 text-black text-right">{location}</h3>
         <p className="text-2xl font-inter font-light text-gray-700 mb-2">{formatDate(startDate)}{endDate ? `- ${formatDate(endDate)}` : ''}</p>
         <p className="text-2xl font-inter font-light text-gray-700 mb-5">{price}</p>
+        <p className="text-xl font-inter  text-gray-700 mb-1">{category}</p>
         <p className="text-lg font-inter font-light text-gray-700 mb-9">{tags.map((tag, index) => (
           <span key={index} className='mr-1'>#{tag}</span>
         ))}</p>

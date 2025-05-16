@@ -48,7 +48,7 @@ export default function AdminMenu() {
                 </Link>
             </div>
             <div className="mb-10">
-                <EventList events={upcoming} user={user}/>
+                <EventList isScrollable={true} events={upcoming} user={user}/>
             </div>
             <h1 className="text-left text-3xl font-inter font-medium text-[#313131] dark:text-white  ml-40 mb-5">
                 Ongoing Events

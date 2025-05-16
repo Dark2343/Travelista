@@ -7,6 +7,7 @@
 @import '@fontsource/inter/600.css'; /* Semi Bold */
 @import '@fontsource/inter/700.css'; /* Bold */
 
+@plugin 'tailwind-scrollbar';
 @custom-variant dark (&:where(.dark, .dark *));
 
 @font-face {

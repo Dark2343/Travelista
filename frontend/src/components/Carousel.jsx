@@ -31,6 +31,7 @@ export default function Carousel({ events, user }) {
                 startDate={event.startDate}
                 endDate={event.endDate}
                 price={event.price.toLocaleString('en-US') + ' EGP'}
+                category={event.category}
                 tags={event.tags}
                 image={event.image}
                 user={user}
