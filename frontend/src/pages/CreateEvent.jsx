@@ -52,6 +52,17 @@ export default function CreateEvent() {
         });
       console.log('Event created successfully:', response.data);
       alert('Event created successfully!');
+
+      setCurrentDate(null);
+      setImage(null);
+      setTitle('');
+      setEventLocation('');
+      setEndDate(null);
+      setTime('');
+      setDescription('');
+      setPrice('');
+      setCategory('');
+      setTags('');
     } catch (error) {
       console.error('Error creating event:', error);
       alert('Error creating event. Please try again.');

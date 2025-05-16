@@ -124,7 +124,7 @@ export default function Login() {
                         {/* Login Button */}
                         <button className="py-3 w-1/3 mt-5 bg-button-dark-mode text-white text-lg font-medium rounded-2xl hover:bg-button-hover-dark-mode transition cursor-pointer"
                             onClick={handleSubmit}>
-                            {loading ? <Loading/> : 'Log In'}
+                            {loading ? <Loading size={23} /> : 'Log In'}
                         </button>
                     </div>
 

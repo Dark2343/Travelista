@@ -27,7 +27,8 @@ export default function EventMenu() {
     useEffect(() => {
         axios.get('/events')
         .then((response) => {
-            const filteredEvents = response.data.filter((event) => event.status === 'upcoming');
+            const filteredEvents = response.data.filter((event) => event.status === 'upcoming')
+            .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
             setEvents(filteredEvents); // Set events data
             setLoading(false); // Set loading to false
         })

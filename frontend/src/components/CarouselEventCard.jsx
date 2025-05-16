@@ -67,7 +67,7 @@ export default function CarouselEventCard({ id, title, location, startDate, endD
   return (
     <div className="w-full h-[300px] sm:h-[400px] md:h-[460px] bg-white rounded-2xl overflow-hidden shadow-md flex">
       {/* Text Side */}
-      <div className="w-1/2 p-6 flex flex-col justify-center ">
+      <div className="w-2/3 p-6 flex flex-col justify-center ">
         <h2 className="text-4xl font-GenBk font-normal mb-1 text-black">{title}</h2>
         <h3 className="text-2xl font-inter font-light mb-20 text-black text-right">{location}</h3>
         <p className="text-2xl font-inter font-light text-gray-700 mb-2">{formatDate(startDate)}{endDate ? `- ${formatDate(endDate)}` : ''}</p>
