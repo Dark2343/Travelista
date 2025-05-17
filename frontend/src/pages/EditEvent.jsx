@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import axios from '../services/api';
 import Loading from '../components/Loading';
@@ -6,6 +6,9 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import Dropdown from '../components/Dropdown';
 import { toast } from 'react-toastify';
+import { jwtDecode } from 'jwt-decode';
+
+
 
 function convertTo24Hour(time12h) {
   const [time, modifier] = time12h.split(' '); // Split "10:00" and "AM"
@@ -41,7 +44,30 @@ export default function EditEvent() {
     const loc = useLocation();
     const event = loc.state?.event;
     const navigate = useNavigate();
+    
+    useEffect(() => {
+        const token = localStorage.getItem('token'); // Get token from local storage
+        if (token) {
+            try {
+                const decodedToken = jwtDecode(token); // Decode the token
 
+                // Redirect if not admin
+                if (decodedToken.role !== 'admin') {
+                    toast.error("You are not authorized to access this page."); // Show error message
+                    navigate('/'); // Redirect to home page
+                    return;
+                }
+            } catch (error) {
+                toast.error("You are not authorized to access this page."); // Show error message
+                console.error(error);
+                navigate('/'); // Redirect if token invalid
+            }
+        } else {
+            toast.error("You are not authorized to access this page."); // Show error message
+            navigate('/'); // Redirect if no token
+        }
+    }, [navigate]); // add navigate to dependencies
+    
     // State variables for form inputs
     const [currentDate, setCurrentDate] = useState(event.startDate || null);
     const [image, setImage] = useState(event.image || null);
@@ -55,6 +81,7 @@ export default function EditEvent() {
     const [tags, setTags] = useState(event.tags.join(' ') || '');
     const [status, setStatus] = useState(event.status || '');
     const [loading, setLoading] = useState(false);
+
 
     const today = new Date(); // Prevent selecting past dates
 

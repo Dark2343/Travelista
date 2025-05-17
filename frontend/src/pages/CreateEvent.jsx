@@ -1,10 +1,13 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import axios from '../services/api';
 import Loading from '../components/Loading';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import Dropdown from '../components/Dropdown';
 import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
+import { jwtDecode } from 'jwt-decode';
+
 
 function convertTo12Hour(time24) {
   let [hours, minutes] = time24.split(':');
@@ -18,6 +21,7 @@ function convertTo12Hour(time24) {
 
 export default function CreateEvent() {
   
+  const navigate = useNavigate(); // Hook to programmatically navigate
   // State variables for form inputs
   const [currentDate, setCurrentDate] = useState(null);
   const [image, setImage] = useState(null);
@@ -30,6 +34,28 @@ export default function CreateEvent() {
   const [category, setCategory] = useState('');
   const [tags, setTags] = useState('');
   const [loading, setLoading] = useState(false);
+
+   useEffect(() => {
+          const token = localStorage.getItem('token'); // Get token from local storage
+          if (token) {
+              try {
+                  const decodedToken = jwtDecode(token); // Decode the token
+  
+                  // Redirect if not admin
+                  if (decodedToken.role !== 'admin') {
+                      toast.error("You are not authorized to access this page."); // Show error message
+                      navigate('/'); // Redirect to home page
+                  }
+              } catch (error) {
+                  toast.error("You are not authorized to access this page."); // Show error message
+                  navigate('/'); // Redirect if token invalid
+              }
+          } else {
+              toast.error("You are not authorized to access this page."); // Show error message
+              navigate('/'); // Redirect if no token
+          }
+      }, [navigate]); // add navigate to dependencies
+  
 
   const today = new Date(); // Prevent selecting past dates
 

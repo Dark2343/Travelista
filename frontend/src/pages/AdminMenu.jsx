@@ -5,8 +5,11 @@ import Error from '../components/Error';
 import {useEffect, useState} from 'react';
 import { Link } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 
 export default function AdminMenu() {
+    const navigate = useNavigate(); // Hook to programmatically navigate
     const [events, setEvents] = useState([]); // State to hold events data
     const [loading, setLoading] = useState(true); // State to manage loading state
     const [error, setError] = useState(null); // State to manage error state
@@ -15,10 +18,24 @@ export default function AdminMenu() {
     useEffect(() => {
         const token = localStorage.getItem('token'); // Get token from local storage
         if (token) {
-            const decodedToken = jwtDecode(token); // Decode the token
-            setUser(decodedToken); // Set user data from decoded token
+            try {
+                const decodedToken = jwtDecode(token); // Decode the token
+                setUser(decodedToken); // Set user data from decoded token
+
+                // Redirect if not admin
+                if (decodedToken.role !== 'admin') {
+                    toast.error("You are not authorized to access this page."); // Show error message
+                    navigate('/'); // Redirect to home page
+                }
+            } catch (error) {
+                toast.error("You are not authorized to access this page."); // Show error message
+                navigate('/'); // Redirect if token invalid
+            }
+        } else {
+            toast.error("You are not authorized to access this page."); // Show error message
+            navigate('/'); // Redirect if no token
         }
-    }, []); // Empty dependency array to run effect only once
+    }, [navigate]); // add navigate to dependencies
 
     useEffect(() => {
         setLoading(true);
