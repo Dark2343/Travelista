@@ -26,7 +26,6 @@ export default function EventCard({ id, title, location, startDate, endDate, pri
                 const result = await isBooked();
                 setBooked(result);
             } catch (err) {
-                console.error("Booking check failed", err);
                 setBooked(false); // fallback to avoid infinite loading
             }
         };
@@ -44,8 +43,7 @@ export default function EventCard({ id, title, location, startDate, endDate, pri
             'Authorization': `Bearer ${localStorage.getItem('token')}`,
             },
         })
-        .then((response) => {
-            console.log('Booking successful:', response.data);
+        .then(() => {
             navigate(`/events/${id}/book`);
         })
     }

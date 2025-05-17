@@ -83,8 +83,7 @@ export default function EventDetails() {
             'Authorization': `Bearer ${localStorage.getItem('token')}`,
             },
         })
-        .then((response) => {
-            console.log('Booking successful:', response.data);
+        .then(() => {
             navigate(`/events/${id}/book`);
         })
     }
@@ -95,9 +94,8 @@ export default function EventDetails() {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`,
                 },
         })
-        .then((response) => {
+        .then(() => {
             toast.success('Event deleted successfully');
-            console.log('Event deleted successfully:', response.data);
             navigate(`/dashboard`);
         })
     }

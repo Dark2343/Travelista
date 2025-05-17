@@ -64,7 +64,6 @@ export default function EventMenu() {
             setEvents([...events, ...newData.events]);
             setPage(nextPage);
             setHasMore(events.length + newData.events.length < newData.totalEvents);
-            console.log(events);
         } catch (err) {
             setError(err);
         } finally {

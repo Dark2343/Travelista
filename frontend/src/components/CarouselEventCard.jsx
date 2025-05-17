@@ -43,7 +43,6 @@ export default function CarouselEventCard({ id, title, location, startDate, endD
           },
       })
       .then((response) => {
-          console.log('Booking successful:', response.data);
           navigate(`/events/${id}/book`);
       })
   }
@@ -59,7 +58,6 @@ export default function CarouselEventCard({ id, title, location, startDate, endD
           // Assuming response.data is an array of bookings
           return response.data.some(booking => booking.event._id === id);
       } catch (error) {
-          console.error("Error checking if event is booked:", error);
           return false;
       }
   };
