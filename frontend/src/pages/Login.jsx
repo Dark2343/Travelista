@@ -6,7 +6,8 @@ import { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import { Link } from "react-router-dom";
 import { FaSun, FaMoon } from 'react-icons/fa';
-
+import { toast } from 'react-toastify';
+import { jwtDecode } from "jwt-decode";
 
 export default function Login() {
     // Initialize the theme state by checking localStorage
@@ -45,12 +46,13 @@ export default function Login() {
         try {
             const response = await axios.post('/users/login', userData);
             localStorage.setItem('token', response.data.token); // Store token in localStorage
+            const decodedToken = jwtDecode(response.data.token); // Decode the token
             
-            console.log('Logged in successfully:', response.data);
+            toast.info(`Logged in as: ${decodedToken.firstName} ${decodedToken.lastName}`);
             navigate('/'); // Redirect to home page
         } catch (error) {
             console.error('Error logging in:', error);
-            alert('Error logging in. Please try again.');
+            toast.error('Error logging in. Please try again.');
         } finally {
             setLoading(false);
         }
@@ -60,7 +62,7 @@ export default function Login() {
 
         // Validate form fields
         if (!email || !password) {
-            alert('Please fill in all fields');
+            toast.error('Please fill in all fields');
             return;
         }
         

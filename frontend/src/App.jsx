@@ -9,6 +9,8 @@ import AdminMenu from './pages/AdminMenu';
 import BookedEvent from './pages/BookedEvent';
 import MyEvents from './pages/MyEvents';
 import EditEvent from './pages/EditEvent';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 function AppContent() {
@@ -33,6 +35,20 @@ function AppContent() {
           <Route path="/myEvents" element={<MyEvents />} />
         </Routes>
       </div>
+
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="colored" // or "light" | "dark"
+        limit={3}
+      />
     </>
   );
 }

@@ -5,6 +5,7 @@ import Loading from '../components/Loading';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import Dropdown from '../components/Dropdown';
+import { toast } from 'react-toastify';
 
 function convertTo24Hour(time12h) {
   const [time, modifier] = time12h.split(' '); // Split "10:00" and "AM"
@@ -83,12 +84,10 @@ export default function EditEvent() {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + JWT}
         });
-        console.log('Event updated successfully:', response.data);
-        alert('Event updated successfully!');
-      navigate(`/events/${event._id}`);
+        toast.success('Event updated successfully!');
+        navigate(`/events/${event._id}`);
     } catch (error) {
-        console.error('Error updating event:', error);
-        alert('Error updating event. Please try again.');
+        toast.error('Error updating event. Please try again.');
     } finally {
         setLoading(false);
     }
@@ -135,7 +134,7 @@ export default function EditEvent() {
                 {image ? (
                     <img src={image} alt={<Loading/>}
                     className="w-full h-full object-cover"
-                    onError={() => { alert('Invalid image URL'); setImage(null);}}/>):
+                    onError={() => { toast.error('Invalid image URL'); setImage(null);}}/>):
                     (<div className="flex flex-col items-center text-black">
                     <div className="text-3xl bg-gray-500 dark:bg-[#2D6350] text-gray-900 dark:text-white rounded-lg px-4 py-2">+</div>
                     <div className="mt-2 text-lg font-medium dark:text-white">Add Cover Image</div>

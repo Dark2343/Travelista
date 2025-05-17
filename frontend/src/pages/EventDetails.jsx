@@ -4,6 +4,8 @@ import Error from '../components/Error';
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
+import { toast } from 'react-toastify';
+
 
 
 function formatDate(dateString) {
@@ -94,7 +96,7 @@ export default function EventDetails() {
                 },
         })
         .then((response) => {
-            alert('Event deleted successfully');
+            toast.success('Event deleted successfully');
             console.log('Event deleted successfully:', response.data);
             navigate(`/dashboard`);
         })
