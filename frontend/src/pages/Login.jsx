@@ -130,7 +130,7 @@ export default function Login() {
 
 
                     {/* Sign Up Link */}
-                    <div className="flex mt-40 ml-5">
+                    <div className="flex mt-48 ml-5">
                         <h1 className="text-gray-700 font-inter font-medium text-lg">Don't have an account?</h1>
                         <Link to="/register" className="text-green-600 font-inter text-lg font-bold ml-1">Sign Up</Link>
                     </div>

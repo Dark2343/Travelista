@@ -72,7 +72,7 @@ export default function EventMenu() {
     };
 
     if (loading) {
-        return <Loading size={30}/>;
+        return <Loading size={50}/>;
     }
     if (error) {
         return <div className="text-[#313131] dark:text-white text-2xl flex justify-center">Error: {error.message}</div>; // Show error message

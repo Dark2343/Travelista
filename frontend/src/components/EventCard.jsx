@@ -16,17 +16,24 @@ function formatDate(dateString) {
 export default function EventCard({ id, title, location, startDate, endDate, price, image, user }) {
 
     const navigate = useNavigate();
-    const [booked, setBooked] = useState(false);
+    const [booked, setBooked] = useState(null);
 
     useEffect(() => {
         const checkBooking = async () => {
-            const result = await isBooked();
-            setBooked(result);
-    };
-        if (user?.role !== 'admin') {
-            checkBooking();
-        }
-    }, []);
+            if (!user || user.role === 'admin') return;
+
+            try {
+                const result = await isBooked();
+                setBooked(result);
+            } catch (err) {
+                console.error("Booking check failed", err);
+                setBooked(false); // fallback to avoid infinite loading
+            }
+        };
+
+        checkBooking();
+    }, [user, id]);
+
 
 
     const bookEvent = async () => {
@@ -70,7 +77,6 @@ export default function EventCard({ id, title, location, startDate, endDate, pri
             <div className="w-full h-1/2 cursor-pointer" onClick={handleCardClick}>
                 <img
                 src={image}
-                alt={<Loading/>}
                 className="w-full h-full object-cover"
                 />
             </div>
@@ -82,21 +88,24 @@ export default function EventCard({ id, title, location, startDate, endDate, pri
                 <p className="text-lg font-inter text-gray-700 ">{formatDate(startDate)}{endDate ? `- ${formatDate(endDate)}` : ''}</p>
                 <p className="text-lg font-inter mb-5 text-gray-700 ">{price}</p>
         
-                {!user ? (
-                    // Not logged in
-                    <button
-                        className="px-4 py-2 w-3/4 mx-auto mb-3 bg-button-dark-mode text-white text-lg font-medium rounded-2xl hover:bg-button-hover-dark-mode transition cursor-pointer"
-                        onClick={() => navigate('/login')}
-                    >
-                        Book Now
-                    </button>
-                ) : user.role === 'admin' ? (
+                {user?.role === 'admin' ? (
                     // Admin user
                     <button
                         className="px-4 py-2 w-4/5 mx-auto bg-button-dark-mode text-white text-lg font-medium rounded-2xl hover:bg-button-hover-dark-mode transition cursor-pointer"
                         onClick={handleCardClick}
                     >
                         Details
+                    </button>
+                ) : booked === null ? (
+                    // Still checking booking status
+                    <Loading size={30} />
+                ) : !user ? (
+                    // Not logged in
+                    <button
+                        className="px-4 py-2 w-3/4 mx-auto mb-3 bg-button-dark-mode text-white text-lg font-medium rounded-2xl hover:bg-button-hover-dark-mode transition cursor-pointer"
+                        onClick={() => navigate('/login')}
+                    >
+                        Book Now
                     </button>
                 ) : !booked ? (
                     // Logged in, not booked
@@ -115,6 +124,7 @@ export default function EventCard({ id, title, location, startDate, endDate, pri
                         Booked
                     </button>
                 )}
+
             </div>
         </div>
     );

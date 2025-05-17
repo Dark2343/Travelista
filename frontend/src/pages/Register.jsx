@@ -154,7 +154,7 @@ export default function Register() {
 
 
                     {/* Log In Link */}
-                    <div className="flex mt-17 ml-5">
+                    <div className="flex mt-25 ml-5">
                         <h1 className="text-gray-700 font-inter font-medium text-lg">Already have an account?</h1>
                         <Link to="/login" className="text-green-600 font-inter text-lg font-bold ml-1">Log In</Link>
                     </div>

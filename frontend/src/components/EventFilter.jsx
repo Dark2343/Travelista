@@ -43,7 +43,7 @@ export default function EventFilter({ category, setCategory, tag, setTag, maxPri
 
       <input
         type="number"
-        placeholder="Max Price"
+        placeholder="Max Price..."
         value={maxPrice}
         onChange={(e) => setMaxPrice(e.target.value)}
         className="bg-white text-gray-600 font-inter w-54 rounded-2xl px-4 py-2

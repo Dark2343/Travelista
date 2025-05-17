@@ -33,6 +33,7 @@ export default function EventDetails() {
     const navigate = useNavigate();
 
     useEffect(() => {
+        setLoading(true);
         axios.get(`/events/${id}`)
             .then(response => {
                 setEvent(response.data);
@@ -116,7 +117,7 @@ export default function EventDetails() {
 
 
     if (loading) {
-        return <Loading/>; // Show loading message
+        return <Loading size={50}/>; // Show loading message
     }
 
     if (error) {

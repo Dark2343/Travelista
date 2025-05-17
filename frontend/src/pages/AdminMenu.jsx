@@ -1,5 +1,6 @@
 import axios from '../services/api';
 import EventList from '../components/EventList';
+import Loading from '../components/Loading';
 import {useEffect, useState} from 'react';
 import { Link } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
@@ -19,6 +20,7 @@ export default function AdminMenu() {
     }, []); // Empty dependency array to run effect only once
 
     useEffect(() => {
+        setLoading(true);
         axios.get('/events')
         .then((response) => {
             setEvents(response.data.events); // Set events data
@@ -54,7 +56,7 @@ export default function AdminMenu() {
                 Ongoing Events
             </h1>
             <div className="mb-10">
-                <EventList events={ongoingEvents} user={user}/>
+                {loading ? <Loading size={50}/> : <EventList events={ongoingEvents} user={user} />}
             </div>
             <h1 className="text-left text-3xl font-inter font-medium text-[#313131] dark:text-white  ml-40 mb-5">
                 Past Events
