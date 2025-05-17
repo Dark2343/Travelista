@@ -2,6 +2,8 @@ import axios from '../services/api';
 import EventList from '../components/EventList';
 import {useEffect, useState} from 'react';
 import { jwtDecode } from 'jwt-decode';
+import Loading from '../components/Loading';
+import Error from '../components/Error';
 
 export default function AdminMenu() {
     const [user, setUser] = useState(null); // State to hold events data
@@ -12,6 +14,7 @@ export default function AdminMenu() {
   
     useEffect(() => {
     const fetchData = async () => {
+        setLoading(true);
         try {
             const token = localStorage.getItem('token');
             setUser(jwtDecode(token));
@@ -40,6 +43,10 @@ export default function AdminMenu() {
         return bookings.some(booking => booking.event._id === event._id);
     });
 
+    if (error) {
+        return <Error message={error.message} size={50}/> // Show error message
+    }
+
     return (
         <div className="relative">
             <div className="absolute w-[400px] h-[500px] bg-[#049663] blur-[300px] dark:w-[400px] dark:h-[400px] dark:bg-white dark:blur-[400px] dark:opacity-70 rounded-full left-1/2 top-1/8 -translate-x-1/2 z-0" />
@@ -47,7 +54,7 @@ export default function AdminMenu() {
                 Booked Events
             </h1>
             <div className="mb-10">
-                <EventList events={availableEvents} user={user}/>
+                {loading ? <Loading size={50}/> : <EventList events={availableEvents} user={user}/>}
             </div>
         </div>
     );

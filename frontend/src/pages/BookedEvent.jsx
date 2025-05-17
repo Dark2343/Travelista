@@ -1,6 +1,7 @@
 import {useEffect, useState} from 'react';
 import axios from '../services/api';
 import Loading from '../components/Loading';
+import Error from '../components/Error';
 import { useParams } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 
@@ -39,7 +40,7 @@ export default function BookedEvent() {
     }
 
     if (error) {
-        return <div className="text-black dark:text-white text-2xl flex justify-center">Error: {error.message}</div>; // Show error message
+        return <Error message={error.message} size={50}/> // Show error message
     }
 
     return (

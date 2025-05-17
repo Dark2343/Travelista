@@ -1,8 +1,11 @@
 import axios from '../services/api';
 import Loading from '../components/Loading';
+import Error from '../components/Error';
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
+import { toast } from 'react-toastify';
+
 
 
 function formatDate(dateString) {
@@ -30,9 +33,12 @@ export default function EventDetails() {
     const [event, setEvent] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [booked, setBooked] = useState(false);
+    const [user, setUser] = useState(null); // State to hold user information
     const navigate = useNavigate();
 
     useEffect(() => {
+        setLoading(true);
         axios.get(`/events/${id}`)
             .then(response => {
                 setEvent(response.data);
@@ -44,8 +50,6 @@ export default function EventDetails() {
             });
         }, [id]); // Fetch event details when the component mounts or when the id changes
         
-    const [booked, setBooked] = useState(false);
-    const [user, setUser] = useState(null); // State to hold user information
 
     // Check if the user is logged in and decode the JWT token
     useEffect(() => {
@@ -79,8 +83,7 @@ export default function EventDetails() {
             'Authorization': `Bearer ${localStorage.getItem('token')}`,
             },
         })
-        .then((response) => {
-            console.log('Booking successful:', response.data);
+        .then(() => {
             navigate(`/events/${id}/book`);
         })
     }
@@ -91,9 +94,8 @@ export default function EventDetails() {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`,
                 },
         })
-        .then((response) => {
-            alert('Event deleted successfully');
-            console.log('Event deleted successfully:', response.data);
+        .then(() => {
+            toast.success('Event deleted successfully');
             navigate(`/dashboard`);
         })
     }
@@ -116,11 +118,11 @@ export default function EventDetails() {
 
 
     if (loading) {
-        return <Loading/>; // Show loading message
+        return <Loading size={50}/>; // Show loading message
     }
 
     if (error) {
-        return <div className="text-black dark:text-white text-2xl flex justify-center">Error: {error.message}</div>; // Show error message
+        return <Error message={error.message} size={50}/> // Show error message
     }
 
     return (

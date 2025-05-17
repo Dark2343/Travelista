@@ -43,7 +43,6 @@ export default function CarouselEventCard({ id, title, location, startDate, endD
           },
       })
       .then((response) => {
-          console.log('Booking successful:', response.data);
           navigate(`/events/${id}/book`);
       })
   }
@@ -59,7 +58,6 @@ export default function CarouselEventCard({ id, title, location, startDate, endD
           // Assuming response.data is an array of bookings
           return response.data.some(booking => booking.event._id === id);
       } catch (error) {
-          console.error("Error checking if event is booked:", error);
           return false;
       }
   };
@@ -77,21 +75,24 @@ export default function CarouselEventCard({ id, title, location, startDate, endD
           <span key={index} className='mr-1'>#{tag}</span>
         ))}</p>
 
-        {!user ? (
-            // Not logged in
-            <button
-                className="px-4 py-2 w-4/5 mx-auto bg-button-dark-mode text-white text-lg font-medium rounded-2xl hover:bg-button-hover-dark-mode transition cursor-pointer"
-                onClick={() => navigate('/login')}
-            >
-                Book Now
-            </button>
-        ) : user.role === 'admin' ? (
+        {user?.role === 'admin' ? (
             // Admin user
             <button
                 className="px-4 py-2 w-4/5 mx-auto bg-button-dark-mode text-white text-lg font-medium rounded-2xl hover:bg-button-hover-dark-mode transition cursor-pointer"
                 onClick={handleCardClick}
             >
                 Details
+            </button>
+        ) : booked === null ? (
+            // Still checking booking status
+            <Loading />
+        ) : !user ? (
+            // Not logged in
+            <button
+                className="px-4 py-2 w-4/5 mx-auto bg-button-dark-mode text-white text-lg font-medium rounded-2xl hover:bg-button-hover-dark-mode transition cursor-pointer"
+                onClick={() => navigate('/login')}
+            >
+                Book Now
             </button>
         ) : !booked ? (
             // Logged in, not booked
@@ -111,13 +112,14 @@ export default function CarouselEventCard({ id, title, location, startDate, endD
             </button>
         )}
 
+
       </div>
 
       {/* Image Side */}
       <div className="w-full h-full cursor-pointer" onClick={handleCardClick}>
         <img
           src={image}
-          alt={<Loading/>}
+          alt={<Loading />}
           className="w-full h-full object-cover"
         />
       </div>

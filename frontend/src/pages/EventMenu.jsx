@@ -2,6 +2,7 @@ import {useEffect, useState} from 'react';
 import Carousel from '../components/Carousel';
 import EventList from '../components/EventList';
 import Loading from '../components/Loading';
+import Error from '../components/Error';
 import axios from '../services/api';
 import { jwtDecode } from 'jwt-decode';
 
@@ -33,7 +34,7 @@ export default function EventMenu() {
             const response = await axios.get(`/events?page=${pageNum}&limit=${EVENTS_LIMIT}&upcomingOnly=true`); // Fetch events from the API
             return response.data;
         } catch (err) {
-        throw err;
+            throw err;
         }
     };
 
@@ -63,7 +64,6 @@ export default function EventMenu() {
             setEvents([...events, ...newData.events]);
             setPage(nextPage);
             setHasMore(events.length + newData.events.length < newData.totalEvents);
-            console.log(events);
         } catch (err) {
             setError(err);
         } finally {
@@ -72,10 +72,11 @@ export default function EventMenu() {
     };
 
     if (loading) {
-        return <Loading size={30}/>;
+        return <Loading size={50}/>;
     }
+    
     if (error) {
-        return <div className="text-[#313131] dark:text-white text-2xl flex justify-center">Error: {error.message}</div>; // Show error message
+        return <Error message={error.message} size={50}/> // Show error message
     }
 
     return (

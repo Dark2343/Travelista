@@ -6,7 +6,8 @@ import { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import { Link } from "react-router-dom";
 import { FaSun, FaMoon } from 'react-icons/fa';
-
+import { toast } from 'react-toastify';
+import { jwtDecode } from "jwt-decode";
 
 export default function Register() {
     // Initialize the theme state by checking localStorage
@@ -47,12 +48,13 @@ export default function Register() {
         try {
             const response = await axios.post('/users/register', userData);
             localStorage.setItem('token', response.data.token); // Store token in localStorage
+            const decodedToken = jwtDecode(response.data.token); // Decode the token
 
-            console.log('Account created successfully:', response.data);
+            toast.success('Account created successfully');
+            toast.info(`Logged in as: ${decodedToken.firstName} ${decodedToken.lastName}`);
             navigate('/'); // Redirect to home page
         } catch (error) {
-            console.error('Error logging in:', error);
-            alert('Error logging in. Please try again.');
+            toast.error('Error logging in. Please try again.');
         } finally {
             setLoading(false);
         }
@@ -62,7 +64,7 @@ export default function Register() {
 
         // Validate form fields
         if (!firstName || !lastName || !email || !password) {
-            alert('Please fill in all fields');
+            toast.error('Please fill in all fields');
             return;
         }
         
@@ -154,7 +156,7 @@ export default function Register() {
 
 
                     {/* Log In Link */}
-                    <div className="flex mt-17 ml-5">
+                    <div className="flex mt-25 ml-5">
                         <h1 className="text-gray-700 font-inter font-medium text-lg">Already have an account?</h1>
                         <Link to="/login" className="text-green-600 font-inter text-lg font-bold ml-1">Log In</Link>
                     </div>

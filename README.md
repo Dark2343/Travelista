@@ -25,7 +25,7 @@ The entire UI/UX design was created first using **Figma**, allowing for a clean 
 
 ### Admin Panel  
 - Separate admin dashboard to Create, Read, Update, and Delete (CRUD) events.  
-- Event image upload support with file validation.                                    ---EDIT
+– Event image integration through direct image URL input, replacing file upload functionality.
 - Management of event tags and categories.
 - Pagination implemented for performance optimization.
 
@@ -49,9 +49,8 @@ The entire UI/UX design was created first using **Figma**, allowing for a clean 
 - TailwindCSS for utility-first responsive styling and theming.  
 
 ### Deployment  
-- Backend and frontend deployed on [Insert Platform: Render, Vercel, Heroku, etc.].   ---EDIT
+- Backend and frontend deployed on Render.
 - Environment variables managed securely.  
-- Continuous deployment setup via GitHub Actions (optional).                          ---EDIT
 
 ---
 
