@@ -15,7 +15,7 @@ The entire UI/UX design was created first using **Figma**, allowing for a clean 
 - Role-based access control differentiating Admin and User privileges.  
 
 ### Event Listings  
-- Responsive flex layout using TailwindCSS for event display.                         ---EDIT
+- Responsive flex layout using TailwindCSS for event display.
 - Filtering by categories and tags for easy event discovery.  
 - Booked events display a "Booked" label instead of "Book Now" for users.  
 
@@ -25,7 +25,7 @@ The entire UI/UX design was created first using **Figma**, allowing for a clean 
 
 ### Admin Panel  
 - Separate admin dashboard to Create, Read, Update, and Delete (CRUD) events.  
-– Event image integration through direct image URL input, replacing file upload functionality.
+- Event image integration through direct image URL input, replacing file upload functionality.
 - Management of event tags and categories.
 - Pagination implemented for performance optimization.
 
@@ -45,7 +45,6 @@ The entire UI/UX design was created first using **Figma**, allowing for a clean 
 
 ### Frontend  
 - React.js functional components with React Router for SPA navigation.  
-- State management using React Context API.                                           ---EDIT
 - TailwindCSS for utility-first responsive styling and theming.  
 
 ### Deployment  
