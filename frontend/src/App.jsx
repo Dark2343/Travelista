@@ -1,4 +1,5 @@
 import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
 import EventMenu from './pages/EventMenu';
 import CreateEvent from './pages/CreateEvent';
@@ -11,6 +12,7 @@ import MyEvents from './pages/MyEvents';
 import EditEvent from './pages/EditEvent';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import axios from './services/api';
 
 
 function AppContent() {
@@ -18,10 +20,29 @@ function AppContent() {
   const location = useLocation(); // Get the current location
   const hideNavbarRoutes = ['/login', '/register']; // Define the routes where you want to hide the navbar
   const shouldHideNavbar = hideNavbarRoutes.includes(location.pathname); // Check if the current route is in the hideNavbarRoutes array (true or false)
+  const [events, setEvents] = useState([]);
+  const [filteredEvents, setFilteredEvents] = useState([]);
+
+    useEffect(() => {
+        axios.get('/events')
+        .then((response) => {
+            setEvents(response.data.events); // Set events data
+            console.log("Fetched events:", response.data.events);
+          })
+        .catch(err => {
+            console.error("Failed to fetch events:", err);
+        });
+    }, []);
+
+    const handleSearch = (query) => {
+        const filtered = events.filter(event =>
+            event.title.toLowerCase().startsWith(query.toLowerCase()));
+        setFilteredEvents(filtered);
+    };
 
   return (
     <>
-      {!shouldHideNavbar && <Navbar />}
+      {!shouldHideNavbar && <Navbar onSearch={handleSearch} results={filteredEvents}/>}
       <div className={shouldHideNavbar ? '' : "pt-18"}>
         <Routes>
           <Route path="/" element={<EventMenu />} />

@@ -1,12 +1,24 @@
 import { FaSearch, FaSun, FaMoon } from "react-icons/fa";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import Loading from "./Loading";
 import { jwtDecode } from "jwt-decode";
 import { Link } from "react-router-dom";
 import logo from '../assets/logo.png';
 import UserMenu from "./UserMenu";
 
-export default function Navbar() {
+export default function Navbar({ onSearch, results= [] }) {
+
+    const [search, setSearch] = useState("");
+    const [showResults, setShowResults] = useState(false);
+    const searchRef = useRef(null);
+
+    const handleSearchChange = (e) => {
+        const value = e.target.value;
+        setSearch(value);
+        onSearch(value); // call parent function with current input
+        setShowResults(value.length > 0); // Show results if input is not empty
+    };
+
     // Initialize the theme state by checking localStorage
     const getInitialTheme = () => {
         // Try to read from localStorage if the theme is already saved
@@ -48,6 +60,19 @@ export default function Navbar() {
         setIsDarkMode((prev) => !prev); // Toggle theme
     };
 
+    // Click outside to close search results
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (searchRef.current && !searchRef.current.contains(event.target)) {
+                setShowResults(false);
+            }
+        };
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
+
     return (
         <div className="px-5 pt-5"> {/* Outer container for the navbar */}
             <div className="sticky bg-[#043524] dark:bg-navbar-dark-mode z-50 shadow-md px-4 py-2 rounded-xl flex justify-between items-center">
@@ -57,13 +82,30 @@ export default function Navbar() {
                     </div>
                 </Link>
 
-                <div className="flex items-center border-b border-white/90 pl-1 w-1/6">
-                    <FaSearch className="text-white" />
-                    <input
+                <div className="relative w-1/6" ref={searchRef}>
+                    <div className="flex items-center border-b border-white/90 pl-1">
+                        <FaSearch className="text-white" />
+                        <input
                         type="text"
+                        value={search}
+                        onChange={handleSearchChange}
                         placeholder="Search for events..."
                         className="bg-transparent outline-none placeholder-white placeholder:font-semibold px-4 py-2 w-full"
-                    />
+                        onFocus={() => setShowResults(true)}
+                        />
+                    </div>
+
+                    {search && showResults && results.length > 0 && (
+                        <div className="absolute top-full left-0 w-full bg-[#04573a] mt-2 rounded-lg shadow-lg max-h-60 overflow-y-auto z-50">
+                            {results.map((event) => (
+                                <Link key={event._id} to={`/events/${event._id}`}>
+                                    <div className="px-4 py-2 hover:bg-button-hover-dark-mode cursor-pointer text-white">
+                                        {event.title}
+                                    </div>
+                                </Link>
+                            ))}
+                        </div>
+                    )}
                 </div>
 
                 <div className="flex space-x-6 text-white mr-5">

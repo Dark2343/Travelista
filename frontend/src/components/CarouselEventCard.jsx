@@ -47,7 +47,7 @@ export default function CarouselEventCard({ id, title, location, startDate, endD
       })
   }
 
-  const isBooked = async () => {
+    const isBooked = async () => {
       try {
           const response = await axios.get('/bookings/user', {
           headers: {

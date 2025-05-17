@@ -16,7 +16,7 @@ export default function EventList({ events, user, isScrollable = false }) {
     }
 
     if (tag) {
-      filtered = filtered.filter(event => event.tags?.includes(tag));
+      filtered = filtered.filter(event => event.tags?.some(t => t.startsWith(tag)));
     }
 
     if (maxPrice) {
