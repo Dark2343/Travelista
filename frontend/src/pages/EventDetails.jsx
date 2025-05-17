@@ -1,5 +1,6 @@
 import axios from '../services/api';
 import Loading from '../components/Loading';
+import Error from '../components/Error';
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
@@ -30,6 +31,8 @@ export default function EventDetails() {
     const [event, setEvent] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [booked, setBooked] = useState(false);
+    const [user, setUser] = useState(null); // State to hold user information
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -45,8 +48,6 @@ export default function EventDetails() {
             });
         }, [id]); // Fetch event details when the component mounts or when the id changes
         
-    const [booked, setBooked] = useState(false);
-    const [user, setUser] = useState(null); // State to hold user information
 
     // Check if the user is logged in and decode the JWT token
     useEffect(() => {
@@ -121,7 +122,7 @@ export default function EventDetails() {
     }
 
     if (error) {
-        return <div className="text-black dark:text-white text-2xl flex justify-center">Error: {error.message}</div>; // Show error message
+        return <Error message={error.message} size={50}/> // Show error message
     }
 
     return (

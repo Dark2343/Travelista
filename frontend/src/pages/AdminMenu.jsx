@@ -1,6 +1,7 @@
 import axios from '../services/api';
 import EventList from '../components/EventList';
 import Loading from '../components/Loading';
+import Error from '../components/Error';
 import {useEffect, useState} from 'react';
 import { Link } from 'react-router-dom';
 import { jwtDecode } from 'jwt-decode';
@@ -32,9 +33,13 @@ export default function AdminMenu() {
         });
     }, []); // Empty dependency array to run effect only once
 
-    const upcoming = events.filter((event) => event.status === 'upcoming');
+    const upcomingEvents = events.filter((event) => event.status === 'upcoming');
     const ongoingEvents = events.filter((event) => event.status === 'ongoing');
     const pastEvents = events.filter((event) => event.status === 'past');
+
+    if (error) {
+        return <Error message={error.message} size={50}/> // Show error message
+    }
 
     return (
         <div className="relative">
@@ -50,19 +55,19 @@ export default function AdminMenu() {
                 </Link>
             </div>
             <div className="mb-10">
-                <EventList isScrollable={true} events={upcoming} user={user}/>
+                {loading ? <Loading size={50}/> : <EventList isScrollable={true} events={upcomingEvents} user={user} />}
             </div>
             <h1 className="text-left text-3xl font-inter font-medium text-[#313131] dark:text-white  ml-40 mb-5">
                 Ongoing Events
             </h1>
             <div className="mb-10">
-                {loading ? <Loading size={50}/> : <EventList events={ongoingEvents} user={user} />}
+                {loading ? <Loading size={50}/> : <EventList isScrollable={true} events={ongoingEvents} user={user} />}
             </div>
             <h1 className="text-left text-3xl font-inter font-medium text-[#313131] dark:text-white  ml-40 mb-5">
                 Past Events
             </h1>
             <div className="mb-10">
-                <EventList events={pastEvents} user={user}/>
+                {loading ? <Loading size={50}/> : <EventList isScrollable={true} events={pastEvents} user={user} />}
             </div>
         </div>
     );

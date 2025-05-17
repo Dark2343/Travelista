@@ -3,6 +3,7 @@ import EventList from '../components/EventList';
 import {useEffect, useState} from 'react';
 import { jwtDecode } from 'jwt-decode';
 import Loading from '../components/Loading';
+import Error from '../components/Error';
 
 export default function AdminMenu() {
     const [user, setUser] = useState(null); // State to hold events data
@@ -41,6 +42,10 @@ export default function AdminMenu() {
     const availableEvents = events.filter(event => {
         return bookings.some(booking => booking.event._id === event._id);
     });
+
+    if (error) {
+        return <Error message={error.message} size={50}/> // Show error message
+    }
 
     return (
         <div className="relative">
