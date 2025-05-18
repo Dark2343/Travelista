@@ -6,8 +6,12 @@ Travelista is a full-stack web application built with the MERN stack (MongoDB, E
 ## Design  
 The entire UI/UX design was created first using **Figma**, allowing for a clean and modern user experience that was then implemented in React with TailwindCSS.
 
-### Live Site:
+## Live Site
 https://travelista-frontend.onrender.com
+
+### Admin Account: 
+email: mohamed2003elashmawy@gmail.com
+password: adminAccount
 
 ## 
 ---
