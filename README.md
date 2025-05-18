@@ -10,8 +10,8 @@ The entire UI/UX design was created first using **Figma**, allowing for a clean 
 https://travelista-frontend.onrender.com
 
 ### Admin Account: 
-email: mohamed2003elashmawy@gmail.com
-password: adminAccount
+Email: mohamed2003elashmawy@gmail.com </br>
+Password: adminAccount
 
 ## 
 ---
