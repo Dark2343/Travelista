@@ -10,7 +10,7 @@ The entire UI/UX design was created first using **Figma**, allowing for a clean 
 https://travelista-frontend.onrender.com
 
 ### Admin Account: 
-Email: mohamed2003elashmawy@gmail.com </br>
+Email: adminaccount@gmail.com </br>
 Password: adminAccount
 
 ## 
@@ -65,7 +65,7 @@ Password: adminAccount
 
 1. Clone the repository:  
    ```bash
-   git clone https://github.com/yourusername/travelista.git
+   git clone https://github.com/Dark2343/travelista
    cd travelista
    ```
 
